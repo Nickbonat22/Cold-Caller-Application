@@ -3,34 +3,17 @@
 #   Purpose of this code is as a prototype for reading/writing from/to a file.
 
 import csv
-
-class Student:
-    def __init__(self, firstName, lastName, uoID, email, pSpelling, reveal):
-        self.fname = firstName
-        self.lname = lastName
-        self.id = uoID
-        self.email = email
-        self.pspell = pSpelling
-        self.reveal = reveal
-
-    def getFName(self):
-        return self.fname
-
-    def getLName(self):
-        return self.lname
-
-    def getID(self):
-        return self.id
-
-    def getEmail(self):
-        return self.email
-
-    def getReveal(self):
-        return self.reveal
+import sys
+currentSys = sys.path
+sys.path.append('../Models/')
+from student import Student
+sys.path = currentSys
 
 # code for reading file titled Roster.tsv
 def readFile(studentQ):
-    roster = open("Roster.tsv", 'r')
+    # sys.path.append('../Resources/')
+    roster = open("../Resources/Roster.tsv", 'r')
+    # sys.path = currentSys
     reader = csv.reader(roster, delimiter='\t')
     for row in reader:
         if row[-1] == 'X':

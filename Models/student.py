@@ -23,3 +23,6 @@ class Student:
 
 	def getEmail(self):
 		return self.email
+
+	def getReveal(self):
+		return self.reveal
