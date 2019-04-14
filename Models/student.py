@@ -1,6 +1,7 @@
 '''
-CIS 422 Project 1
-Contributors: Nicholas Bonat, 
+April 7
+Author: Nicholas Bonat
+This code 
 '''
 
 class Student:
@@ -11,7 +12,10 @@ class Student:
 		self.email = email
 		self.pspell = pSpelling
 		self.reveal = reveal
+		self.correctQ = correctQ
+		self.calledOnCount = calledOnCount
 
+	# get
 	def getFName(self):
 		return self.fname
 
@@ -24,5 +28,14 @@ class Student:
 	def getEmail(self):
 		return self.email
 
-	def getReveal(self):
-		return self.reveal
+	def getCorrectQ(self):
+		return self.correctQ
+
+	def setCorrectQ(self, correct):
+		self.correctQ = correct
+
+	def getCalledOnCount(self):
+		return self.calledOnCount
+
+	def setCalledOnCount(self, called):
+		self.calledOnCount = called
