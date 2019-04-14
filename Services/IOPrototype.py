@@ -55,4 +55,22 @@ def main():
     writeToFile(studentQ, output)
     output.close()
 
-if __name__ == "__main__": main()
+from singleton import Singleton
+@Singleton
+class IOService:
+    def __init__(self):
+        print("IOService started")
+    def update_a_queue_with_file(self, queue, file_path):
+        pass
+    def save_a_queue_to_file(self, queue, file_path):
+        pass
+
+
+if __name__ == "__main__":
+    main()
+    # f = IOService() # Error, this isn't how you get the instance of a singleton
+
+    f = IOService.instance() # Good. Being explicit is in line with the Python Zen
+    g = IOService.instance() # Returns already created instance
+
+    print(f is g) # True
