@@ -24,6 +24,7 @@ def readFile(studentQ):
         studentQ.append(Student(row[0], row[1], row[2], row[3], row[4], reveal))
     roster.close()
     del studentQ[0]
+    return studentQ
 
 # code for creating an output file that will not replace/override a file
 def createFile():
