@@ -27,9 +27,14 @@ class MainViewController():
         self.mainView.set_Widgets_top_portrait(name_pos3='Mallory', spelling_pos3='Ma Lorry')
         
 
+        # Bind button/keystrokes to Cold Caller Service APIs
         self.mainView.createWidgets_bottom_Frame()
         self.mainView.btn_good.bind("<Button-1>", self.test_func)
         self.mainView.btn_concern.bind("<Button-1>", self.test_func)
+        self.mainView.root.bind("<space>", self.test_func)
+        self.mainView.root.bind("1", self.test_func)
+        self.mainView.root.bind("2", self.test_func)
+        self.mainView.root.bind("3", self.test_func)
         
         self.mainView.show()
     
