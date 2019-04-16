@@ -11,8 +11,8 @@ class Student:
 		self.email = email
 		self.pspell = pSpelling
 		self.reveal = reveal
-		#self.correctQ = correctQ
-		#self.calledOnCount = calledOnCount
+		self.correctQ = 0
+		self.calledOnCount = 0
 
 	def getFName(self):
 		return self.fname
@@ -25,7 +25,7 @@ class Student:
 
 	def getEmail(self):
 		return self.email
-		
+
 	def getReveal(self):
 		return self.reveal
 
