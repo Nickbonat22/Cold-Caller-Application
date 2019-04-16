@@ -17,4 +17,9 @@ sys.path.append("./Views")
 sys.path.append("./Controllers")
 from Controllers.mainViewController import MainViewController
 
+import Models.queue
+Models.queue.REINSERTION_AFTER_FIRST_N_PERCENT = 60
+a = Models.queue.Queue()
+a.pushRandom("Place Holder")
+
 app = MainViewController()

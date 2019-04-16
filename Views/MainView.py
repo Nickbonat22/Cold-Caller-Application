@@ -11,8 +11,6 @@ Topic: GUI for Cold Caller
 Effect: Demonstrating a GUI demo based on TKinter.
 
 '''
-import sys
-
 from tkinter import *
 import tkinter.messagebox as messagebox
 def make_image_label(parent, img, rownum, colnum):
@@ -113,13 +111,6 @@ class MainView():
         
         self.btn_good.grid(row=1, column=0, sticky=(N,S,E,W))
         self.btn_concern.grid(row=1, column=2, sticky=(N,S,E,W))
-
-    def bind_btn_good_to(self, func):
-        self.btn_good.bind("<Button-1>", func)
-    
-    def bind_btn_bad_to(self, func):
-        self.btn_bad_func = func
-        self.btn_concern.bind("<Button-1>", func)
 
     def show(self):
         self.root.title("Cold Caller")
