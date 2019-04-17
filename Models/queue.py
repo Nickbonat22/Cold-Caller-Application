@@ -1,8 +1,9 @@
 '''
 CIS 422 Project 1
-Contributors: Jerry Xie, Vu Vo
+Contributors: Jerry Xie, Vu Vo, Qi Han
 '''
 from collections import deque
+import random
 REINSERTION_AFTER_FIRST_N_PERCENT = 30
 class Queue:
     studentQ = [] # [Studeng]
@@ -28,10 +29,14 @@ class Queue:
         self.studentQ.pop(location)
         pass
 
+   def length(self):
+      return len(self.studentQ)
+      pass
+
     def pushRandom(self,student):
         # dont forget to use the reinsertion_after_first_n_percent info
         # we can set this up in the main.py as an environment variable
         #this function will randomly reinsert a student back into queue
-        global REINSERTION_AFTER_FIRST_N_PERCENT
-        print(REINSERTION_AFTER_FIRST_N_PERCENT)
+        value = random.randint(0, self.length()-1)
+        self.studentQ.insert(value,item)
         pass
