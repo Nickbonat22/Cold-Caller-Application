@@ -11,9 +11,6 @@ Topic: Controller for Main View
 Effect: Handle MainView intereaction, response logic
 
 '''
-import os, sys
-sys.path.append(os.path.dirname(os.getcwd()) + '/Views')
-sys.path.append('./Views')
 from MainView import *
 
 class MainViewController():
