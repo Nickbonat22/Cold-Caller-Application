@@ -3,16 +3,12 @@
 #   Purpose of this code is as a prototype for reading/writing from/to a file.
 
 import csv
-import sys
-currentSys = sys.path
-sys.path.append('../Models/')
 from student import Student
-sys.path = currentSys
 
 # code for reading file titled Roster.tsv
 def readFile(studentQ):
     # sys.path.append('../Resources/')
-    roster = open("../Resources/Roster.tsv", 'r')
+    roster = open("Resources/Roster.tsv", 'r')
     # sys.path = currentSys
     reader = csv.reader(roster, delimiter='\t')
     for row in reader:

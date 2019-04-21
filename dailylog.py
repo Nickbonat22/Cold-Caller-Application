@@ -4,10 +4,6 @@ Author: Nicholas Bonat
 Create daily log file and write to it
 '''
 
-import sys
-import os
-currentSys = sys.path
-sys.path.append('../Models/')
 from student import Student
 from IOPrototype import readFile
 import datetime

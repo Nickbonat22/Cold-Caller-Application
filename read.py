@@ -3,9 +3,6 @@ test
 '''
 
 from tkinter import *
-import sys
-currentSys = sys.path
-sys.path.append('../Models/')
 from student import Student
 from IOPrototype import readFile
 from dailylog import *
@@ -56,7 +53,6 @@ concernB.grid(column=1,row=1)
 
 summ = Button(window, text="Summary",command=summidk)
 summ.grid(column=2,row=1)
-
 
 
 window.mainloop()

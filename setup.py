@@ -38,10 +38,10 @@ OPTIONS = {
 }
 # project files
 DATA_FILES += add_path_tree( '', 'Resources' )
-DATA_FILES += add_path_tree( '', 'Controllers' )
-DATA_FILES += add_path_tree( '', 'Models' )
-DATA_FILES += add_path_tree( '', 'Services' )
-DATA_FILES += add_path_tree( '', 'Views' )
+# DATA_FILES += add_path_tree( '', 'Controllers' )
+# DATA_FILES += add_path_tree( '', 'Models' )
+# DATA_FILES += add_path_tree( '', 'Services' )
+# DATA_FILES += add_path_tree( '', 'Views' )
 
 setup(
     name='Cold Caller',
