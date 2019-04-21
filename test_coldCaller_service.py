@@ -9,11 +9,10 @@ def remove(name_labels, studentQ:Student_queue, pos:int):
     print(studentQ)
     f = ColdCallerService.instance()
     if(f.perform_good_at(studentQ, pos)):
-        new_student = f.get_studnt_at(studentQ, 2)
-        if(not new_student == None):
-            for i in range(len(name_labels) - 1):
-                name_labels[i].config(text=name_labels[i + 1].cget('text'))
-            name_labels[-1].config(text=new_student.getFName() + " " + new_student.getLName())
+        for i in range(len(name_labels)):
+            new_student = f.get_studnt_at(studentQ, i)
+            if not new_student == None:
+                name_labels[i].config(text=new_student.getFName() + " " + new_student.getLName())
 
 if __name__ == '__main__':
     test_queue = Student_queue()
