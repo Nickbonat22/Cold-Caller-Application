@@ -7,6 +7,7 @@ from singleton import Singleton
 from student_queue import Student_queue
 from student import Student
 from dailylog import dailyRemove, dailyConcern
+from IOPrototype import readFile
 
 # By runing "python3 coldCallerService.py"
 # You should see :
@@ -16,32 +17,38 @@ from dailylog import dailyRemove, dailyConcern
 @Singleton
 class ColdCallerService:
     _instance = None
+    curr_queue = None
     def __init__(self):
         print("Cold Caller Service started")
         print("Loading queue from IO service")
+        # call IOService to load a saved queue
+        # if it doesnt find a save queue
+        # init a new queue
+        self.curr_queue = Student_queue()
+        self.curr_queue.studentQ = readFile(self.curr_queue.studentQ)
     
-    def perform_good_at(self, student_q : Student_queue, position : int) -> bool:
-        if(student_q.isEmpty()):
+    def perform_good_at(self, position : int) -> bool:
+        if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return False
-        the_student = student_q.popfrom(position)
+        the_student = self.curr_queue.popfrom(position)
         the_student.correctQ += 1
         the_student.calledOnCount += 1
-        student_q.pushRandom(the_student)
+        self.curr_queue.pushRandom(the_student)
         dailyRemove(the_student)
         return True
 
-    def perform_bad_at(self, student_q : Student_queue, position : int) -> bool:
-        if(student_q.isEmpty()):
+    def perform_bad_at(self, position : int) -> bool:
+        if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return False
-        the_student = student_q.popfrom(position)
+        the_student = self.curr_queue.popfrom(position)
         the_student.correctQ -= 1
         dailyConcern()
         return True
     
-    def get_studnt_at(self, student_q : Student_queue, position : int) -> Student:
-        if(student_q.isEmpty() or position >= student_q.length()):
+    def get_studnt_at(self, position : int) -> Student:
+        if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return None
-        return student_q.get_student_at(position)
+        return self.curr_queue.get_student_at(position)
 
 if __name__ == '__main__':
     # f = ColdCallerService() # Error, this isn't how you get the instance of a singleton

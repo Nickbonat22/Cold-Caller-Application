@@ -10,9 +10,6 @@ REINSERTION_AFTER_FIRST_N_PERCENT = 30
 class Student_queue:
     #studentQ = [] # [Studeng]
     def __init__(self):
-        # call IOService to load a saved queue
-        # if it doesnt find a save queue
-        # init a new queue
         self.studentQ = []
         self.recent = None
     

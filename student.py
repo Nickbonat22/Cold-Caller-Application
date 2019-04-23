@@ -45,6 +45,8 @@ class Student:
         self.calledOnCount = called
 
     def __eq__(self, other):
+        if other == None:
+            return False
         return ((self.fname == other.fname) and
             (self.lname == other.lname) and
             (self.id == other.id) and
