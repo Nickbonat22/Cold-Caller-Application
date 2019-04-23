@@ -4,6 +4,7 @@ Contributors: Jerry Xie, Vu Vo, Qi Han
 '''
 from collections import deque
 import random
+import math
 import functools
 REINSERTION_AFTER_FIRST_N_PERCENT = 30
 class Student_queue:
@@ -67,7 +68,9 @@ class Student_queue:
         # dont forget to use the reinsertion_after_first_n_percent info
         # we can set this up in the main.py as an environment variable
         #this function will randomly reinsert a student back into queue
-        value = random.randint(0, self.length()-1)
+        global REINSERTION_AFTER_FIRST_N_PERCENT
+        lower_bound = math.floor(len(self.studentQ) * REINSERTION_AFTER_FIRST_N_PERCENT / 100)
+        value = random.randint(lower_bound, len(self.studentQ))
         self.studentQ.insert(value,student)
 
     def get_student_at(self, position):
