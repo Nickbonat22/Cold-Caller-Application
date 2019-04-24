@@ -10,8 +10,9 @@ import datetime
 
 #open file, the current date to the daily log, then close it so it can be read in full
 now = datetime.datetime.now()
-with open('daily.txt', 'a') as file:
-	file.write(now.strftime("\n%m-%d-%Y\n\n"))
+with open('daily.txt', 'w+') as file:
+	file.write('Cold Caller Daily Log\n')
+	file.write(now.strftime("%m-%d-%Y\n\n"))
 
 #open file, add first/last/email, close file
 def dailyRemove(name):
