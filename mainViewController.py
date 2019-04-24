@@ -31,6 +31,7 @@ class MainViewController():
         self.has_popup = False
         self.aboutme_popup = None
         self.root = Tk()
+        self.root.title("Cold Caller")
         self.root.geometry("500x500")
         rows = 0
         while rows <= 50:
@@ -42,34 +43,35 @@ class MainViewController():
         self.cold_caller_tab_view = self.mainView.get_cold_caller_tab_view()
 
         # Call Cold Caller Service to get the first 3 students
-        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Bob', spelling='Bob')
-        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(2, name='Eve', spelling='E')
-        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(3, name='Mallory', spelling='Ma Lorry')
-        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Alice', spelling='A ly se')
+        self.update_stuents_portrait()
+        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Bob', spelling='Bob')
+        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(2, name='Eve', spelling='E')
+        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(3, name='Mallory', spelling='Ma Lorry')
+        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Alice', spelling='A ly se')
 
         # Bind button/keystrokes to Cold Caller Service APIs
         self.cold_caller_tab_view.createWidgets_bottom_Frame()
-        self.cold_caller_tab_view.btn_good1.bind("<Button-1>", lambda e: self.test_func(e, 1))
-        self.cold_caller_tab_view.btn_concern1.bind("<Button-1>", lambda e: self.test_func(e, -1))
+        self.cold_caller_tab_view.good_btns[1].bind("<Button-1>", lambda e: self.remove(e, 0))
+        self.cold_caller_tab_view.concern_btns[1].bind("<Button-1>", lambda e: self.remove(e, 0, True))
 
-        self.cold_caller_tab_view.btn_good2.bind("<Button-1>", lambda e: self.test_func(e, 2))
-        self.cold_caller_tab_view.btn_concern2.bind("<Button-1>", lambda e: self.test_func(e, -2))
+        self.cold_caller_tab_view.good_btns[2].bind("<Button-1>", lambda e: self.remove(e, 1))
+        self.cold_caller_tab_view.concern_btns[2].bind("<Button-1>", lambda e: self.remove(e, 1, True))
 
-        self.cold_caller_tab_view.btn_good3.bind("<Button-1>", lambda e: self.test_func(e, 3))
-        self.cold_caller_tab_view.btn_concern3.bind("<Button-1>", lambda e: self.test_func(e, -3))
+        self.cold_caller_tab_view.good_btns[3].bind("<Button-1>", lambda e: self.remove(e, 2))
+        self.cold_caller_tab_view.concern_btns[3].bind("<Button-1>", lambda e: self.remove(e, 2, True))
         
         # Keystrokes mapping
         global CONCERN_1A, CONCERN_1B, CONCERN_2, CONCERN_3
         global REMOVE_1A, REMOVE_1B, REMOVE_2, REMOVE_3
-        self.root.bind(CONCERN_1A, lambda e: self.test_func(e, -1))
-        self.root.bind(CONCERN_1B, lambda e: self.test_func(e, -1))
-        self.root.bind(CONCERN_2, lambda e: self.test_func(e, -2))
-        self.root.bind(CONCERN_3, lambda e: self.test_func(e, -3))
+        self.root.bind(CONCERN_1A, lambda e: self.remove(e, 0, True))
+        self.root.bind(CONCERN_1B, lambda e: self.remove(e, 0, True))
+        self.root.bind(CONCERN_2, lambda e: self.remove(e, 1, True))
+        self.root.bind(CONCERN_3, lambda e: self.remove(e, 2, True))
 
-        self.root.bind(REMOVE_1A, lambda e: self.test_func(e, 1))
-        self.root.bind(REMOVE_1B, lambda e: self.test_func(e, 1))
-        self.root.bind(REMOVE_2, lambda e: self.test_func(e, 2))
-        self.root.bind(REMOVE_3, lambda e: self.test_func(e, 3))
+        self.root.bind(REMOVE_1A, lambda e: self.remove(e, 0))
+        self.root.bind(REMOVE_1B, lambda e: self.remove(e, 0))
+        self.root.bind(REMOVE_2, lambda e: self.remove(e, 1))
+        self.root.bind(REMOVE_3, lambda e: self.remove(e, 2))
 
         # Load the log file and set log tab's text
         self.mainView.get_log_tab_view().set_text("""HAMLET: To be, or not to be--that is the question:Whether 'tis nobler in the mind to sufferThe slings and arrows of outrageous fortuneOr to take arms against a sea of troublesAnd by opposing end them. To die, to sleep--No more--and by a sleep to say we endThe heartache, and the thousand natural shocksThat flesh is heir to. 'Tis a consummationDevoutly to be wished.""")
@@ -118,9 +120,9 @@ class MainViewController():
         for i in range(3):
             new_student = f.get_studnt_at(i)
             if not new_student == None:
-                name_labels[i].config(text=new_student.getFName() + " " + new_student.getLName())
+                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=new_student.getFName() + " " + new_student.getLName())
 
-    def remove(self, pos:int, concern = False):
+    def remove(self, event, pos:int, concern = False):
         f = ColdCallerService.instance()
         if(not concern):
             if(f.perform_good_at(pos)):

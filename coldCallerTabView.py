@@ -10,6 +10,9 @@ class ColdCallerTabView(Frame):
         self.portraits_labels = {}
         self.spellings_labels = {}
         self.portraits = {}
+        self.good_btns = {}
+        self.concern_btns = {}
+        self.btns_group = {}
 
     def _make_portrait_with_name_label(self, parent, rownum, colnum, name, number, portrait_path, spelling):
         Grid.rowconfigure(parent, rownum, weight=1)
@@ -62,50 +65,34 @@ class ColdCallerTabView(Frame):
 
     # def set_Widgets_top_portrait(self, image_pos1 = None, name_pos1 = None, spelling_pos1 = None, image_pos2 = None, name_pos2 = None, spelling_pos2 = None, image_pos3 = None, name_pos3 = None, spelling_pos3 = None):
     def set_Widgets_top_portrait(self, pos:int, portrait_path = None, name = None, spelling = None):
-        # pos should be 1,2,3
-        pos -= 1
+        # pos should be 0,1,2
         try:
             self._update_portrait_with_name_label(0, pos, portrait_path, name, spelling)
         except KeyError:
             self._make_portrait_with_name_label(self, 0, pos, name, str(pos) + ': ', portrait_path, spelling)
 
+    def _create_btns_group_to(self, parent, groupnum, rownum, colnum):
+        self.btns_group[groupnum] = Frame(self)
+        self.btns_group[groupnum].grid(row=rownum, column=colnum, sticky=(N,S,E,W))
+        self.good_btns[groupnum] = Button(self.btns_group[groupnum], text="Remove")
+        self.concern_btns[groupnum] = Button(self.btns_group[groupnum], text="Concern")
+
+        self.good_btns[groupnum].grid(row=0, column=0, sticky=(N,S,E,W))
+        self.concern_btns[groupnum].grid(row=0, column=1, sticky=(N,S,E,W))
+        Grid.rowconfigure(self.btns_group[groupnum], 0, weight=1)
+        Grid.columnconfigure(self.btns_group[groupnum], 0, weight=1)
+        Grid.columnconfigure(self.btns_group[groupnum], 1, weight=1)
+    
     def createWidgets_bottom_Frame(self):
         Grid.rowconfigure(self, 1, weight=1)
         Grid.columnconfigure(self, 0, weight=1)
         Grid.columnconfigure(self, 2, weight=1)
 
         # First student
-        self.btns_1 = Frame(self)
-        self.btns_1.grid(row=1, column=0, sticky=(N,S,E,W))
-        self.btn_good1 = Button(self.btns_1, text="Good")
-        self.btn_concern1 = Button(self.btns_1, text="Concern")
-        
-        self.btn_good1.grid(row=0, column=0, sticky=(N,S,E,W))
-        self.btn_concern1.grid(row=0, column=1, sticky=(N,S,E,W))
-        Grid.rowconfigure(self.btns_1, 0, weight=1)
-        Grid.columnconfigure(self.btns_1, 0, weight=1)
-        Grid.columnconfigure(self.btns_1, 1, weight=1)
+        self._create_btns_group_to(self, 1, 1, 0)
 
         # Second student
-        self.btns_2 = Frame(self)
-        self.btns_2.grid(row=1, column=1, sticky=(N,S,E,W))
-        self.btn_good2 = Button(self.btns_2, text="Good")
-        self.btn_concern2 = Button(self.btns_2, text="Concern")
-        
-        self.btn_good2.grid(row=0, column=0, sticky=(N,S,E,W))
-        self.btn_concern2.grid(row=0, column=1, sticky=(N,S,E,W))
-        Grid.rowconfigure(self.btns_2, 0, weight=1)
-        Grid.columnconfigure(self.btns_2, 0, weight=1)
-        Grid.columnconfigure(self.btns_2, 1, weight=1)
+        self._create_btns_group_to(self, 2, 1, 1)
 
         # Third student
-        self.btns_3 = Frame(self)
-        self.btns_3.grid(row=1, column=2, sticky=(N,S,E,W))
-        self.btn_good3 = Button(self.btns_3, text="Good")
-        self.btn_concern3 = Button(self.btns_3, text="Concern")
-        
-        self.btn_good3.grid(row=0, column=0, sticky=(N,S,E,W))
-        self.btn_concern3.grid(row=0, column=1, sticky=(N,S,E,W))
-        Grid.rowconfigure(self.btns_3, 0, weight=1)
-        Grid.columnconfigure(self.btns_3, 0, weight=1)
-        Grid.columnconfigure(self.btns_3, 1, weight=1)
+        self._create_btns_group_to(self, 3, 1, 2)
