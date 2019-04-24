@@ -27,6 +27,9 @@ class ColdCallerService:
         self.curr_queue = Student_queue()
         self.curr_queue.studentQ = readFile(self.curr_queue.studentQ)
     
+    def get_queue_length(self):
+        return self.curr_queue.length()
+
     def perform_good_at(self, position : int) -> bool:
         if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return False

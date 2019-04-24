@@ -15,6 +15,7 @@ from tkinter import *
 # from tkinter.ttk import *
 from MainView import *
 from coldCallerTabView import ColdCallerTabView
+from coldCallerService import ColdCallerService
 
 CONCERN_1A = 'c'
 CONCERN_1B = 'v'
@@ -41,10 +42,10 @@ class MainViewController():
         self.cold_caller_tab_view = self.mainView.get_cold_caller_tab_view()
 
         # Call Cold Caller Service to get the first 3 students
-        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(name_pos1='Bob', spelling_pos1='Bob')
-        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(name_pos2='Eve', spelling_pos2='E')
-        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(name_pos3='Mallory', spelling_pos3='Ma Lorry')
-        
+        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Bob', spelling='Bob')
+        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(2, name='Eve', spelling='E')
+        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(3, name='Mallory', spelling='Ma Lorry')
+        self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Alice', spelling='A ly se')
 
         # Bind button/keystrokes to Cold Caller Service APIs
         self.cold_caller_tab_view.createWidgets_bottom_Frame()
@@ -74,7 +75,6 @@ class MainViewController():
         self.mainView.get_log_tab_view().set_text("""HAMLET: To be, or not to be--that is the question:Whether 'tis nobler in the mind to sufferThe slings and arrows of outrageous fortuneOr to take arms against a sea of troublesAnd by opposing end them. To die, to sleep--No more--and by a sleep to say we endThe heartache, and the thousand natural shocksThat flesh is heir to. 'Tis a consummationDevoutly to be wished.""")
 
         self.createMenu()
-
 
     def createMenu(self):
         self.menu = Menu(self.root)
@@ -112,6 +112,22 @@ class MainViewController():
 
         self.aboutme_popup.transient(self.root)
         self.mainView.wait_window(self.aboutme_popup)
+    
+    def update_stuents_portrait(self):
+        f = ColdCallerService.instance()
+        for i in range(3):
+            new_student = f.get_studnt_at(i)
+            if not new_student == None:
+                name_labels[i].config(text=new_student.getFName() + " " + new_student.getLName())
+
+    def remove(self, pos:int, concern = False):
+        f = ColdCallerService.instance()
+        if(not concern):
+            if(f.perform_good_at(pos)):
+                self.update_stuents_portrait()
+        else:
+            if(f.perform_bad_at(pos)):
+                self.update_stuents_portrait()
 
     def test_func(self, event, arg = None):
         if(self.mainView.nb.index("current") == 0 and not self.has_popup):
