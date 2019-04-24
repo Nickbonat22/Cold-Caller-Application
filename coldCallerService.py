@@ -31,7 +31,7 @@ class ColdCallerService:
         if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return False
         the_student = self.curr_queue.popfrom(position)
-        the_student.correctQ += 1
+        the_student.concernCount += 1
         the_student.calledOnCount += 1
         self.curr_queue.pushRandom(the_student)
         dailyRemove(the_student)
@@ -41,7 +41,7 @@ class ColdCallerService:
         if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return False
         the_student = self.curr_queue.lastRemove()
-        the_student.correctQ -= 1
+        the_student.concernCount -= 1
         dailyConcern(the_student)
         return True
     
