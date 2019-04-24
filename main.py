@@ -13,11 +13,18 @@ Effect: Demonstrating a GUI demo based on TKinter.
 '''
 from tkinter import *
 from tkinter.ttk import *
+import mainViewController
 from mainViewController import MainViewController
 import student_queue
-from student_queue import Student_queue
-student_queue.REINSERTION_AFTER_FIRST_N_PERCENT = 60
-a = Student_queue()
+student_queue.REINSERTION_AFTER_FIRST_N_PERCENT = 50
+MainViewController.CONCERN_1A = 'c'
+MainViewController.CONCERN_1B = 'v'
+MainViewController.CONCERN_2 = 'b'
+MainViewController.CONCERN_3 = 'n'
+MainViewController.REMOVE_1A = '1'
+MainViewController.REMOVE_1B = '<space>'
+MainViewController.REMOVE_2 = '2'
+MainViewController.REMOVE_3 = '3'
 
 app = MainViewController()
 app.show()

@@ -16,6 +16,15 @@ from tkinter import *
 from MainView import *
 from coldCallerTabView import ColdCallerTabView
 
+CONCERN_1A = 'c'
+CONCERN_1B = 'v'
+CONCERN_2 = 'b'
+CONCERN_3 = 'n'
+REMOVE_1A = '1'
+REMOVE_1B = '<space>'
+REMOVE_2 = '2'
+REMOVE_3 = '3'
+
 class MainViewController():
     def __init__(self):
         self.has_popup = False
@@ -49,10 +58,17 @@ class MainViewController():
         self.cold_caller_tab_view.btn_concern3.bind("<Button-1>", lambda e: self.test_func(e, -3))
         
         # Keystrokes mapping
-        self.root.bind("<space>", self.test_func)
-        self.root.bind("1", self.test_func)
-        self.root.bind("2", self.test_func)
-        self.root.bind("3", self.test_func)
+        global CONCERN_1A, CONCERN_1B, CONCERN_2, CONCERN_3
+        global REMOVE_1A, REMOVE_1B, REMOVE_2, REMOVE_3
+        self.root.bind(CONCERN_1A, lambda e: self.test_func(e, -1))
+        self.root.bind(CONCERN_1B, lambda e: self.test_func(e, -1))
+        self.root.bind(CONCERN_2, lambda e: self.test_func(e, -2))
+        self.root.bind(CONCERN_3, lambda e: self.test_func(e, -3))
+
+        self.root.bind(REMOVE_1A, lambda e: self.test_func(e, 1))
+        self.root.bind(REMOVE_1B, lambda e: self.test_func(e, 1))
+        self.root.bind(REMOVE_2, lambda e: self.test_func(e, 2))
+        self.root.bind(REMOVE_3, lambda e: self.test_func(e, 3))
 
         # Load the log file and set log tab's text
         self.mainView.get_log_tab_view().set_text("""HAMLET: To be, or not to be--that is the question:Whether 'tis nobler in the mind to sufferThe slings and arrows of outrageous fortuneOr to take arms against a sea of troublesAnd by opposing end them. To die, to sleep--No more--and by a sleep to say we endThe heartache, and the thousand natural shocksThat flesh is heir to. 'Tis a consummationDevoutly to be wished.""")
@@ -65,7 +81,8 @@ class MainViewController():
         self.root.config(menu=self.menu)
         self.submenu= Menu(self.menu)
         self.menu.add_cascade(label="Import/Export",menu=self.submenu)
-        self.submenu.add_command(label="Import from a roster", command=self.test_func)
+        self.submenu.add_command(label="Import a roster", command=self.test_func)
+        self.submenu.add_command(label="Export to a roster", command=self.test_func)
         self.submenu.add_separator()
         self.submenu.add_command(label="Exit", command=self.root.quit)
 
@@ -76,7 +93,6 @@ class MainViewController():
     def destory_popup_window(self, popup):
         popup.destroy()
         self.has_popup = False
-        # self.root.grab_set()
 
     def aboutme_windows(self):
         try:
@@ -95,12 +111,9 @@ class MainViewController():
         Button(self.aboutme_popup,text='OK',command=lambda: self.destory_popup_window(self.aboutme_popup)).grid()
 
         self.aboutme_popup.transient(self.root)
-        # self.aboutme_popup.grab_set()
-         
         self.mainView.wait_window(self.aboutme_popup)
 
-    def test_func(self, event = None, arg = None):
-        print(self.mainView.nb.index("current"))
+    def test_func(self, event, arg = None):
         if(self.mainView.nb.index("current") == 0 and not self.has_popup):
             print("It worked in the tab", event.type)
             if(not arg == None):
