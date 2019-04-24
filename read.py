@@ -5,7 +5,7 @@ test
 from tkinter import *
 from student import Student
 from IOPrototype import readFile
-from dailylog import *
+from logService import *
 
 studentQ = []
 roster = readFile(studentQ)

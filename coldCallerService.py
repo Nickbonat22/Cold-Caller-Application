@@ -6,7 +6,7 @@
 from singleton import Singleton
 from student_queue import Student_queue
 from student import Student
-from dailylog import dailyRemove, dailyConcern
+from logService import dailyRemove, dailyConcern
 from IOPrototype import readFile
 
 # By runing "python3 coldCallerService.py"
