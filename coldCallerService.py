@@ -40,7 +40,7 @@ class ColdCallerService:
     def perform_bad_at(self, position : int) -> bool:
         if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return False
-        the_student = self.curr_queue.popfrom(position)
+        the_student = self.curr_queue.lastRemove()
         the_student.correctQ -= 1
         dailyConcern(the_student)
         return True
