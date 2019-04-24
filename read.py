@@ -24,7 +24,7 @@ name3.grid(column=2, row=0)
 
 def remove():
 	removeName = roster[0]
-	removeName.correctQ += 1
+	removeName.concernCount += 1
 	removeName.calledOnCount += 1
 	del roster[0]
 	newR = roster
@@ -42,7 +42,7 @@ removeB.grid(column=0,row=1)
 
 def concern():
 	removeName = roster[-1]
-	removeName.correctQ -= 1
+	removeName.concernCount -= 1
 	dailyConcern(removeName)
 
 def summidk():
