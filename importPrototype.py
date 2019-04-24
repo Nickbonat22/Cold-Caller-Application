@@ -1,18 +1,23 @@
-#   4/11/19 15:40
+#   4/23/19 15:40
 #   Author: Zach Domke
-#   Purpose of this code is as a prototype for reading/writing from/to a file.
+#   Purpose of this code is to import a new roster and replace the internal roster
 
 import os
 import csv
-from student_queue import Student_queue
 from student import Student
 
+
+# Main import function. Takes in a new roster and replaces the old roster.
+# Checks for a new roster in the path "ImportFolder/New Roster.tsv" and replaces "Resources/Internal Roster.tsv".
+
 def importRoster():
+    # Locates the new roster or stops running if there is no new roster.
     try:
         newRoster = open("ImportFolder/New Roster.tsv", 'r')
     except FileNotFoundError:
         return
 
+    # Populates the newStudentQ with the list of students from the new roster.
     reader = csv.reader(newRoster, delimiter='\t')
     newStudentQ = []
     for row in reader:
@@ -24,6 +29,7 @@ def importRoster():
     del newStudentQ[0]
     newRoster.close()
 
+    # Populates the oldStudentQ with the students from the current/existing roster.
     existingRoster = open("Resources/Internal Roster.tsv", 'r')
     reader = csv.reader(existingRoster, delimiter='\t')
     oldStudentQ = []
@@ -36,9 +42,11 @@ def importRoster():
     del oldStudentQ[0]
     existingRoster.close()
 
+    # Checks if the queues are different. If they are different, we confirm with the user. If they are the same, we stop.
     if not warning(newStudentQ, oldStudentQ):
         return
 
+    # Overwrites the existing internal roster with the new information.
     existingRoster = open("Resources/Internal Roster.tsv", 'w')
     existingRoster.write("<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
     for x in newStudentQ:
@@ -53,7 +61,9 @@ def importRoster():
         os.remove("ImportFolder/New Roster.tsv")
     return
 
+# Compares 2 lists of students and confirms changes with the user.
 def warning(newStudentQ, oldStudentQ):
+    # Populates the list of differences and tells whether the student will be added or removed.
     diffStudentQ = []
     for x in newStudentQ:
         isIn = False
@@ -70,9 +80,11 @@ def warning(newStudentQ, oldStudentQ):
         if not isIn:
             diffStudentQ.append((x, "removed"))
 
+    # Stops running if there are no differences. Nothing will change.
     if not diffStudentQ:
         return True
 
+    # Prints out a warning that changes will be made and lists the changes. Will ask the user to cancel or continue.
     print("WARNING: There are differences between Internal Roster and New Roster:")
     for (x, code) in diffStudentQ:
         print(x.getFName() + ' ' + x.getLName() + ' ' + code)
