@@ -7,6 +7,10 @@ Create daily log file and write to it
 from student import Student
 from IOPrototype import readFile
 import datetime
+import sys
+import csv
+
+sys.path.append('../Resources/')
 
 #open file, the current date to the daily log, then close it so it can be read in full
 now = datetime.datetime.now()
@@ -29,12 +33,14 @@ def dailyConcern(name):
 	final_log.writelines(last_line)
 	final_log.close()
 
+#create the summary file
 def summary():
-	studentQ = []
-	roster = readFile(studentQ)
-	print(roster[0].getCorrectQ())
-
-
-	
+	with open("Resources/InternalRoster.tsv", 'r') as roster_file:
+		with open('summary.txt', 'w+') as sum_file:
+			reader = csv.reader(roster_file, delimiter='\t')
+			sum_file.write("Summary Performace\n\n")
+			for row in reader:
+				string = '	'.join(row[0:8]) +"\n"
+				sum_file.writelines(string)
 	
 
