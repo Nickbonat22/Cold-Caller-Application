@@ -18,6 +18,8 @@ from coldCallerTabView import ColdCallerTabView
 
 class MainViewController():
     def __init__(self):
+        self.has_popup = False
+        self.aboutme_popup = None
         self.root = Tk()
         self.root.geometry("500x500")
         rows = 0
@@ -54,9 +56,52 @@ class MainViewController():
 
         # Load the log file and set log tab's text
         self.mainView.get_log_tab_view().set_text("""HAMLET: To be, or not to be--that is the question:Whether 'tis nobler in the mind to sufferThe slings and arrows of outrageous fortuneOr to take arms against a sea of troublesAnd by opposing end them. To die, to sleep--No more--and by a sleep to say we endThe heartache, and the thousand natural shocksThat flesh is heir to. 'Tis a consummationDevoutly to be wished.""")
-    
-    def test_func(self, event, arg = None):
-        if(self.mainView.nb.index("current") == 0):
+
+        self.createMenu()
+
+
+    def createMenu(self):
+        self.menu = Menu(self.root)
+        self.root.config(menu=self.menu)
+        self.submenu= Menu(self.menu)
+        self.menu.add_cascade(label="Import/Export",menu=self.submenu)
+        self.submenu.add_command(label="Import from a roster", command=self.test_func)
+        self.submenu.add_separator()
+        self.submenu.add_command(label="Exit", command=self.root.quit)
+
+        self.submenu2 = Menu(self.menu)
+        self.menu.add_cascade(label="About",menu=self.submenu2)
+        self.submenu2.add_command(label="About", command=self.aboutme_windows)
+
+    def destory_popup_window(self, popup):
+        popup.destroy()
+        self.has_popup = False
+        # self.root.grab_set()
+
+    def aboutme_windows(self):
+        try:
+            self.aboutme_popup.focus_set()
+            return
+        except Exception:
+            pass
+        self.has_popup = True
+        self.aboutme_popup = Toplevel(self.root)
+        self.aboutme_popup.title("About")
+        self.aboutme_popup.resizable(0,0)
+
+        explanation = "This program is built to help in increasing students' participation in classes."
+
+        Label(self.aboutme_popup,text=explanation).grid()
+        Button(self.aboutme_popup,text='OK',command=lambda: self.destory_popup_window(self.aboutme_popup)).grid()
+
+        self.aboutme_popup.transient(self.root)
+        # self.aboutme_popup.grab_set()
+         
+        self.mainView.wait_window(self.aboutme_popup)
+
+    def test_func(self, event = None, arg = None):
+        print(self.mainView.nb.index("current"))
+        if(self.mainView.nb.index("current") == 0 and not self.has_popup):
             print("It worked in the tab", event.type)
             if(not arg == None):
                 print("Arguments passed", arg)
