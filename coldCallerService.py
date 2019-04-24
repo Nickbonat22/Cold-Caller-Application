@@ -42,7 +42,7 @@ class ColdCallerService:
             return False
         the_student = self.curr_queue.popfrom(position)
         the_student.correctQ -= 1
-        dailyConcern()
+        dailyConcern(the_student)
         return True
     
     def get_studnt_at(self, position : int) -> Student:
