@@ -1,9 +1,11 @@
 from tkinter import *
+from tkinter.font import Font
 # from tkinter.ttk import *
 
 class ColdCallerTabView(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
+        self.label_font = Font(self.master, family='Arial', size=12, weight='bold')
         self.grid(row=0, column=0, sticky=(N,S,E,W))
         self.top_frames = {}
         self.name_labels = {}
@@ -39,7 +41,7 @@ class ColdCallerTabView(Frame):
             
         Grid.rowconfigure(frame, 1, weight=1)
         Grid.columnconfigure(frame, 1, weight=1)
-        self.name_labels[colnum] = Label(frame, text=name)
+        self.name_labels[colnum] = Label(frame, text=name, font=self.label_font)
         self.name_labels[colnum].grid(row=1, column=1, sticky=(N, S, W))
 
         Grid.rowconfigure(frame, 2, weight=1)
@@ -62,8 +64,7 @@ class ColdCallerTabView(Frame):
         if not new_name == None:
             target_name_label = self.name_labels[colnum]
             target_name_label.config(text=new_name)
-
-    # def set_Widgets_top_portrait(self, image_pos1 = None, name_pos1 = None, spelling_pos1 = None, image_pos2 = None, name_pos2 = None, spelling_pos2 = None, image_pos3 = None, name_pos3 = None, spelling_pos3 = None):
+    
     def set_Widgets_top_portrait(self, pos:int, portrait_path = None, name = None, spelling = None):
         # pos should be 0,1,2
         try:
@@ -90,9 +91,7 @@ class ColdCallerTabView(Frame):
 
         # First student
         self._create_btns_group_to(self, 1, 1, 0)
-
         # Second student
         self._create_btns_group_to(self, 2, 1, 1)
-
         # Third student
         self._create_btns_group_to(self, 3, 1, 2)

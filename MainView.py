@@ -16,13 +16,13 @@ from tkinter.ttk import *
 from coldCallerTabView import ColdCallerTabView
 from logTabView import LogTabView
 class MainView(Frame):
-    def __init__(self, master, name):
+    def __init__(self, master):
         Frame.__init__(self, master)
-        self.master = master
-        self.name = name
 
-        self.nb = Notebook(master)
-        self.nb.grid(row=1, column=0, columnspan=50, rowspan=49, sticky=(N,W,S,E))
+        self.nb = Notebook(self)
+        Grid.rowconfigure(self, 0, weight=1)
+        Grid.columnconfigure(self, 0, weight=1)
+        self.nb.grid(row=0, column=0, sticky=(N,W,S,E))
         
         self.tab1 = ColdCallerTabView(self.nb)
         self.nb.add(self.tab1, text="Cold Caller")

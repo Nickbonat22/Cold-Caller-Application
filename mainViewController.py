@@ -28,8 +28,10 @@ REMOVE_3 = '3'
 
 class MainViewController():
     def __init__(self):
-        self.has_popup = False
+        self.num_popup = 0
         self.aboutme_popup = None
+        self.fontsize_popup = None
+
         self.root = Tk()
         self.root.title("Cold Caller")
         self.root.geometry("500x500")
@@ -39,16 +41,12 @@ class MainViewController():
             self.root.columnconfigure(rows, weight=1)
             rows += 1
 
-        self.mainView = MainView(self.root, "Main Canvas")
+        self.mainView = MainView(self.root)
+        self.mainView.grid(row=0, column=0, columnspan=50, rowspan=50, sticky=(N,W,S,E))
         self.cold_caller_tab_view = self.mainView.get_cold_caller_tab_view()
 
         # Call Cold Caller Service to get the first 3 students
         self.update_stuents_portrait()
-        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Bob', spelling='Bob')
-        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(2, name='Eve', spelling='E')
-        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(3, name='Mallory', spelling='Ma Lorry')
-        # self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(1, name='Alice', spelling='A ly se')
-
         # Bind button/keystrokes to Cold Caller Service APIs
         self.cold_caller_tab_view.createWidgets_bottom_Frame()
         self.cold_caller_tab_view.good_btns[1].bind("<Button-1>", lambda e: self.remove(e, 0))
@@ -59,7 +57,6 @@ class MainViewController():
 
         self.cold_caller_tab_view.good_btns[3].bind("<Button-1>", lambda e: self.remove(e, 2))
         self.cold_caller_tab_view.concern_btns[3].bind("<Button-1>", lambda e: self.remove(e, 2, True))
-        
         # Keystrokes mapping
         global CONCERN_1A, CONCERN_1B, CONCERN_2, CONCERN_3
         global REMOVE_1A, REMOVE_1B, REMOVE_2, REMOVE_3
@@ -77,7 +74,30 @@ class MainViewController():
         self.mainView.get_log_tab_view().set_text("""HAMLET: To be, or not to be--that is the question:Whether 'tis nobler in the mind to sufferThe slings and arrows of outrageous fortuneOr to take arms against a sea of troublesAnd by opposing end them. To die, to sleep--No more--and by a sleep to say we endThe heartache, and the thousand natural shocksThat flesh is heir to. 'Tis a consummationDevoutly to be wished.""")
 
         self.createMenu()
+    
+    def update_stuents_portrait(self):
+        f = ColdCallerService.instance()
+        for i in range(3):
+            new_student = f.get_studnt_at(i)
+            if not new_student == None:
+                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=new_student.getFName() + " " + new_student.getLName())
+     
+    def remove(self, event, pos:int, concern = False):
+        if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
+            f = ColdCallerService.instance()
+            if(not concern):
+                if(f.perform_good_at(pos)):
+                    self.update_stuents_portrait()
+            else:
+                if(f.perform_bad_at(pos)):
+                    self.update_stuents_portrait()
 
+    def test_func(self, event, arg = None):
+        if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
+            print("It worked in the tab", event.type)
+            if(not arg == None):
+                print("Arguments passed", arg)
+    
     def createMenu(self):
         self.menu = Menu(self.root)
         self.root.config(menu=self.menu)
@@ -89,53 +109,66 @@ class MainViewController():
         self.submenu.add_command(label="Exit", command=self.root.quit)
 
         self.submenu2 = Menu(self.menu)
-        self.menu.add_cascade(label="About",menu=self.submenu2)
-        self.submenu2.add_command(label="About", command=self.aboutme_windows)
+        self.menu.add_cascade(label="Misc",menu=self.submenu2)
+        self.submenu2.add_command(label="Font size", command=self.font_size_window)
+        self.submenu2.add_command(label="About", command=self.aboutme_window)
 
-    def destory_popup_window(self, popup):
+    def destory_popup_window_after(self, popup, doing_this_before = None):
+        if not doing_this_before == None:
+            try:
+                doing_this_before()
+            except Exception as e:
+                print(e)
         popup.destroy()
-        self.has_popup = False
+        self.num_popup -= 1
+    
+    def font_size_window(self):
+        try:
+            self.font_size_window.focus_set()
+            return
+        except Exception:
+            pass
+        self.num_popup += 1
+        self.fontsize_popup = Toplevel(self.root)
+        self.fontsize_popup.title("Set names' font size")
+        self.fontsize_popup.resizable(0,0)
 
-    def aboutme_windows(self):
+        onclosing = lambda: self.destory_popup_window_after(self.fontsize_popup)
+        self.fontsize_popup.protocol('WM_DELETE_WINDOW', onclosing)
+        Label(self.fontsize_popup,text="Select font size").grid(row=0, column=0)
+        
+        listbox = Listbox(self.fontsize_popup)
+        for i in range(12, 25):listbox.insert(END, i)
+        listbox.select_set(int(self.mainView.get_cold_caller_tab_view().label_font['size']) - 12)
+        listbox.grid(row=0, column=1)
+        
+        onOk = lambda: self.destory_popup_window_after(self.fontsize_popup, 
+            lambda: self.mainView.get_cold_caller_tab_view().label_font.config(size=listbox.get(ANCHOR)))
+        Button(self.fontsize_popup,text='OK',command=onOk).grid(row=1, column=0)
+        Button(self.fontsize_popup,text='Cancel',command=onclosing).grid(row=1, column=1)
+        self.fontsize_popup.transient(self.root)
+        self.mainView.wait_window(self.fontsize_popup)
+
+    def aboutme_window(self):
         try:
             self.aboutme_popup.focus_set()
             return
         except Exception:
             pass
-        self.has_popup = True
+        self.num_popup += 1
         self.aboutme_popup = Toplevel(self.root)
         self.aboutme_popup.title("About")
         self.aboutme_popup.resizable(0,0)
 
         explanation = "This program is built to help in increasing students' participation in classes."
 
+        onclosing = lambda: self.destory_popup_window_after(self.aboutme_popup)
+        self.aboutme_popup.protocol('WM_DELETE_WINDOW', onclosing)
         Label(self.aboutme_popup,text=explanation).grid()
-        Button(self.aboutme_popup,text='OK',command=lambda: self.destory_popup_window(self.aboutme_popup)).grid()
+        Button(self.aboutme_popup,text='OK',command=onclosing).grid()
 
         self.aboutme_popup.transient(self.root)
         self.mainView.wait_window(self.aboutme_popup)
-    
-    def update_stuents_portrait(self):
-        f = ColdCallerService.instance()
-        for i in range(3):
-            new_student = f.get_studnt_at(i)
-            if not new_student == None:
-                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=new_student.getFName() + " " + new_student.getLName())
-
-    def remove(self, event, pos:int, concern = False):
-        f = ColdCallerService.instance()
-        if(not concern):
-            if(f.perform_good_at(pos)):
-                self.update_stuents_portrait()
-        else:
-            if(f.perform_bad_at(pos)):
-                self.update_stuents_portrait()
-
-    def test_func(self, event, arg = None):
-        if(self.mainView.nb.index("current") == 0 and not self.has_popup):
-            print("It worked in the tab", event.type)
-            if(not arg == None):
-                print("Arguments passed", arg)
     
     def show(self):
         self.root.mainloop()
