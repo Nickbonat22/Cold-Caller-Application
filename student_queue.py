@@ -19,20 +19,12 @@ class Student_queue:
             rslt += student.getFName() + student.getLName()
             rslt += '->'
         return rslt
-
-    def push(self,item):
-        self.studentQ.append(item)
-
-    def pop(self):
-        popItem = self.studentQ.pop(0)
-        self.recent = popItem
-        return popItem
+    
+    def has_recent_student_on_deck(self):
+        return not self.recent == None
 
     def isEmpty(self):
         return self.studentQ == []
-
-    def get_item(self):
-        return self.studentQ
 
     def get_first_three(self):# -> Student
         t = 3
@@ -51,9 +43,8 @@ class Student_queue:
         # this function will remove a student from a specified location
         # and call IOService to save the queue
         #self.studentQ.pop(location)
-        popItem = self.studentQ.pop(location)
-        self.recent = popItem
-        return popItem
+        self.recent = self.studentQ.pop(location)
+        return self.recent
 
     def length(self):
         return len(self.studentQ)
