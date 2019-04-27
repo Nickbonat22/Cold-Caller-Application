@@ -1,6 +1,9 @@
 '''
 CIS 422 Project 1
-Contributors: Jerry Xie, Vu Vo, Qi Han
+Authors: Jerry Xie, Vu Vo, Qi Han
+Created on: April 15, 2019
+Last modified: April 27, 2019
+Topic: this is an implementation of the data structure used to store students
 '''
 from collections import deque
 import random
