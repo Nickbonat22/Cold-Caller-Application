@@ -19,6 +19,18 @@ from student_queue import Student_queue
 # Checks for a new roster in the path "ImportFolder/New Roster.tsv" and replaces "Resources/Internal Roster.tsv".
 @Singleton
 class IO:
+    curr_queue = None
+    def __init__(self):
+        self.curr_queue = Student_queue()
+        with open("Resources/Internal Roster.tsv", 'r') as existingRoster:
+            self.readFile(self.curr_queue.studentQ, existingRoster, True)
+    
+    def get_curr_queue(self): 
+        return self.curr_queue
+    
+    def set_curr_queue(self, to_queue):
+        self.curr_queue = to_queue
+        self.cache(self.curr_queue)
     def importRoster(self):
         # Locates the new roster or stops running if there is no new roster.
         try:
