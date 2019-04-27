@@ -16,6 +16,7 @@ from tkinter import *
 from MainView import *
 from coldCallerTabView import ColdCallerTabView
 from coldCallerService import ColdCallerService
+from student import Student
 
 CONCERN_1A = 'c'
 CONCERN_1B = 'v'
@@ -80,17 +81,16 @@ class MainViewController():
         for i in range(3):
             new_student = f.get_studnt_at(i)
             if not new_student == None:
-                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=new_student.getFName() + " " + new_student.getLName())
+                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=new_student.getFName() + " " + new_student.getLName(), spelling=new_student.getPSpell())
      
     def remove(self, event, pos:int, concern = False):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             f = ColdCallerService.instance()
             if(not concern):
-                if(f.perform_good_at(pos)):
+                if(f.remove_stuent_at(pos)):
                     self.update_stuents_portrait()
             else:
-                if(f.perform_bad_at(pos)):
-                    self.update_stuents_portrait()
+                f.concern_recent_student()
 
     def test_func(self, event, arg = None):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
