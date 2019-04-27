@@ -1,7 +1,16 @@
-#   4/23/19 15:40
-#   Author: Zach Domke
-#   Purpose of this code is to import a new roster and replace the internal roster
+#!/usr/bin/env python3
+'''
+Author: Zach Domke
 
+Created on: Apr 14, 2019
+
+Last modified by: Zach Domke @ Apr 27, 2019
+
+Topic: IO Contoller Class
+
+Effect: Imports a new roster to the system. Exports the current roster to the user. Manages the cache in the system.
+
+'''
 import os
 import csv
 from singleton import Singleton
