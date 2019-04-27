@@ -156,27 +156,27 @@ class IO:
 
 
 
-def main():
-    tester = IO.instance()
+# def main():
+#     tester = IO.instance()
 
-    # Test import roster
-    tester.importRoster()
+#     # Test import roster
+#     tester.importRoster()
 
-    # Test export roster
-    tester.exportRoster()
+#     # Test export roster
+#     tester.exportRoster()
 
-    # Test caching
-    studentQ = []
-    existingRoster = open("Resources/Internal Roster.tsv", 'r')
-    tester.readFile(studentQ, existingRoster, True)
-    workingQueue = Student_queue()
-    workingQueue.setQueue(studentQ)
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    workingQueue.pushRandom(workingQueue.popfrom(1))
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    workingQueue.pushRandom(workingQueue.popfrom(2))
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    tester.cache(workingQueue)
+#     # Test caching
+#     studentQ = []
+#     existingRoster = open("Resources/Internal Roster.tsv", 'r')
+#     tester.readFile(studentQ, existingRoster, True)
+#     workingQueue = Student_queue()
+#     workingQueue.setQueue(studentQ)
+#     workingQueue.pushRandom(workingQueue.popfrom(0))
+#     workingQueue.pushRandom(workingQueue.popfrom(1))
+#     workingQueue.pushRandom(workingQueue.popfrom(0))
+#     workingQueue.pushRandom(workingQueue.popfrom(2))
+#     workingQueue.pushRandom(workingQueue.popfrom(0))
+#     tester.cache(workingQueue)
 
 if __name__ == "__main__":
     main()
