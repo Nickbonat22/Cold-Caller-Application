@@ -12,6 +12,7 @@ Effect: Handle MainView intereaction, response logic
 
 '''
 from tkinter import *
+import tkinter.filedialog
 # from tkinter.ttk import *
 from MainView import *
 from coldCallerTabView import ColdCallerTabView
@@ -82,7 +83,14 @@ class MainViewController():
         for i in range(3):
             new_student = f.get_studnt_at(i)
             if not new_student == None:
-                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=new_student.getFName() + " " + new_student.getLName(), spelling=new_student.getPSpell())
+                name = ""
+                spelling = ""
+                if new_student.getReveal():
+                    name = new_student.getFName() + " " + new_student.getLName()
+                    spelling = new_student.getPSpell()
+                else:
+                    name = new_student.getFName()[0] + new_student.getLName()[0]
+                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=name, spelling=spelling)
      
     def remove(self, event, pos:int, concern = False):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
@@ -92,6 +100,16 @@ class MainViewController():
                     self.update_stuents_portrait()
             else:
                 f.concern_recent_student()
+
+    def get_import_roster_file_name(self):
+        if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
+            file_name = filedialog.askopenfilename(title='Choose your csv/tsv file', filetypes=(('CSV', '*.csv'),('TSV', '*.tsv')))
+            print(file_name)
+    
+    def get_export_roster_file_target_name(self):
+        if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
+            target = filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (('CSV', '*.csv'),('TSV', '*.tsv')))
+            print(target)
 
     def test_func(self, event, arg = None):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
@@ -104,8 +122,8 @@ class MainViewController():
         self.root.config(menu=self.menu)
         self.submenu= Menu(self.menu)
         self.menu.add_cascade(label="Import/Export",menu=self.submenu)
-        self.submenu.add_command(label="Import a roster", command=self.test_func)
-        self.submenu.add_command(label="Export to a roster", command=self.test_func)
+        self.submenu.add_command(label="Import a roster", command=self.get_import_roster_file_name)
+        self.submenu.add_command(label="Export to a roster", command=self.get_export_roster_file_target_name)
         self.submenu.add_separator()
         self.submenu.add_command(label="Exit", command=self.root.quit)
 

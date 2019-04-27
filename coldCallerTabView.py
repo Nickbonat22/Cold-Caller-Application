@@ -48,6 +48,7 @@ class ColdCallerTabView(Frame):
         Grid.columnconfigure(frame, 0, weight=1)
         self.spellings_labels[colnum] = Label(frame, text=spelling, font=self.label_font)
         self.spellings_labels[colnum].grid(row=2, column=0, sticky=(N, E, S, W), columnspan=2)
+
     
     def _update_portrait_with_name_label(self, rownum, colnum, new_portrait_path = None, new_name = None, new_spelling = None):
         # Could throw, use with try...except
