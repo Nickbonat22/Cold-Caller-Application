@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 '''
+CIS 422 Project 1
 Author: Zach Domke
-
 Created on: Apr 14, 2019
-
 Last modified by: Zach Domke @ Apr 27, 2019
-
 Topic: IO Contoller Class
-
 Effect: Imports a new roster to the system. Exports the current roster to the user. Manages the cache in the system.
-
 '''
+
 import os
 import csv
 from singleton import Singleton
