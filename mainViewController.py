@@ -17,6 +17,7 @@ from MainView import *
 from coldCallerTabView import ColdCallerTabView
 from coldCallerService import ColdCallerService
 from student import Student
+from logService import getDailyLog
 
 CONCERN_1A = 'c'
 CONCERN_1B = 'v'
@@ -72,7 +73,7 @@ class MainViewController():
         self.root.bind(REMOVE_3, lambda e: self.remove(e, 2))
 
         # Load the log file and set log tab's text
-        self.mainView.get_log_tab_view().set_text("""HAMLET: To be, or not to be--that is the question:Whether 'tis nobler in the mind to sufferThe slings and arrows of outrageous fortuneOr to take arms against a sea of troublesAnd by opposing end them. To die, to sleep--No more--and by a sleep to say we endThe heartache, and the thousand natural shocksThat flesh is heir to. 'Tis a consummationDevoutly to be wished.""")
+        self.mainView.get_log_tab_view().refresh_log.config(command=lambda: self.mainView.get_log_tab_view().set_text(getDailyLog()))
 
         self.createMenu()
     
