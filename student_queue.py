@@ -8,7 +8,7 @@ import math
 import functools
 REINSERTION_AFTER_FIRST_N_PERCENT = 30
 class Student_queue:
-    #studentQ = [] # [Studeng]
+    #studentQ = [] # [Student]
     def __init__(self):
         self.studentQ = []
         self.recent = None
@@ -66,3 +66,9 @@ class Student_queue:
 
     def get_student_at(self, position):
         return self.studentQ[position]
+
+    def setQueue(self, studentList):
+        self.studentQ = studentList
+
+    def getQueue(self):
+        return self.studentQ
