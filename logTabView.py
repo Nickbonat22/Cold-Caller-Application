@@ -6,18 +6,21 @@ class LogTabView(Frame):
         Frame.__init__(self, master)
         self.text = Text(self)
         self.scrollb = Scrollbar(self)
-        self.export_summary = Button(self, text="Export Summary Log Button")
+        self.export_summary = Button(self, text="Export Summary")
+        self.refresh_log = Button(self, text='Refresh')
 
         self.scrollb.config(command=self.text.yview)
         self.text.config(yscrollcommand=self.scrollb.set)
         
-        
-        self.text.grid(row=0, column=0, sticky=(N,S,W,E))
-        self.scrollb.grid(row=0, column=1, sticky=(N,S,W,E))
-        self.export_summary.grid(row = 1, column=0, columnspan=2, sticky=(N,S,W,E))
+        # self.scrollb.grid(row=0, column=1, sticky=(N,S,W,E))
+        self.export_summary.grid(row = 1, column=0, sticky=(N,S,W,E))
+        self.refresh_log.grid(row = 1, column=1, sticky=(N,S,W,E))
+        self.text.grid(row=0, column=0, columnspan=2, sticky=(N,S,W,E))
 
         Grid.rowconfigure(self, 0, weight=1)
+        Grid.rowconfigure(self, 1, weight=1)
         Grid.columnconfigure(self, 0, weight=1)
+        Grid.columnconfigure(self, 1, weight=1)
         self.text.config(state=DISABLED)
     
     def set_text(self, new_text):

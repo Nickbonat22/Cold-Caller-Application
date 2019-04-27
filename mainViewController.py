@@ -73,7 +73,7 @@ class MainViewController():
         self.root.bind(REMOVE_3, lambda e: self.remove(e, 2))
 
         # Load the log file and set log tab's text
-        self.mainView.get_log_tab_view().set_text(getDailyLog())
+        self.mainView.get_log_tab_view().refresh_log.config(command=lambda: self.mainView.get_log_tab_view().set_text(getDailyLog()))
 
         self.createMenu()
     
