@@ -18,12 +18,13 @@ from MainView import *
 from coldCallerTabView import ColdCallerTabView
 from coldCallerService import ColdCallerService
 from student import Student
-from logService import getDailyLog
+from logService import getDailyLog, summary
 
 CONCERN_1A = 'c'
 CONCERN_1B = 'v'
 CONCERN_2 = 'b'
 CONCERN_3 = 'n'
+CONCERN_4 = 'm'
 REMOVE_1A = '1'
 REMOVE_1B = '<space>'
 REMOVE_2 = '2'
@@ -67,6 +68,7 @@ class MainViewController():
         self.root.bind(CONCERN_1B, lambda e: self.remove(e, 0, True))
         self.root.bind(CONCERN_2, lambda e: self.remove(e, 1, True))
         self.root.bind(CONCERN_3, lambda e: self.remove(e, 2, True))
+        self.root.bind(CONCERN_4, lambda e: self.remove(e, 2, True))
 
         self.root.bind(REMOVE_1A, lambda e: self.remove(e, 0))
         self.root.bind(REMOVE_1B, lambda e: self.remove(e, 0))
@@ -75,6 +77,7 @@ class MainViewController():
 
         # Load the log file and set log tab's text
         self.mainView.get_log_tab_view().refresh_log.config(command=lambda: self.mainView.get_log_tab_view().set_text(getDailyLog()))
+        self.mainView.get_log_tab_view().export_summary.config(command=self.export_summary_file_target_path_with_name)
 
         self.createMenu()
     
@@ -101,15 +104,20 @@ class MainViewController():
             else:
                 f.concern_recent_student()
 
-    def get_import_roster_file_name(self):
+    def import_roster_file_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             file_name = filedialog.askopenfilename(title='Choose your csv/tsv file', filetypes=(('CSV', '*.csv'),('TSV', '*.tsv')))
             print(file_name)
     
-    def get_export_roster_file_target_name(self):
+    def export_roster_file_target_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             target = filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (('CSV', '*.csv'),('TSV', '*.tsv')))
             print(target)
+    
+    def export_summary_file_target_path_with_name(self):
+        if(self.mainView.nb.index("current") == 1 and self.num_popup == 0):
+            target = filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (('TXT', '*.txt'),))
+            summary(target)
 
     def test_func(self, event, arg = None):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
@@ -122,8 +130,8 @@ class MainViewController():
         self.root.config(menu=self.menu)
         self.submenu= Menu(self.menu)
         self.menu.add_cascade(label="Import/Export",menu=self.submenu)
-        self.submenu.add_command(label="Import a roster", command=self.get_import_roster_file_name)
-        self.submenu.add_command(label="Export to a roster", command=self.get_export_roster_file_target_name)
+        self.submenu.add_command(label="Import a roster", command=self.import_roster_file_path_with_name)
+        self.submenu.add_command(label="Export to a roster", command=self.export_roster_file_target_path_with_name)
         self.submenu.add_separator()
         self.submenu.add_command(label="Exit", command=self.root.quit)
 

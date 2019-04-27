@@ -5,7 +5,6 @@ Create daily log file and write to it
 '''
 
 from student import Student
-from IOPrototype import readFile
 import datetime
 import sys
 import csv
@@ -34,9 +33,9 @@ def dailyConcern(name):
 	final_log.close()
 
 #create the summary file
-def summary():
+def summary(path = 'summary.txt'):
 	with open("Resources/Internal Roster.tsv", 'r') as roster_file:
-		with open('summary.txt', 'w+') as sum_file:
+		with open(path, 'w+') as sum_file:
 			reader = csv.reader(roster_file, delimiter='\t')
 			sum_file.write("Summary Performace\n\n")
 			for row in reader:

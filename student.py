@@ -36,13 +36,19 @@ class Student:
         return self.calledOnCount
 
     def setCalledOnCount(self, called):
-        self.calledOnCount = called
+        try:
+            self.calledOnCount = int(called)
+        except:
+            pass
 
     def getConcernCount(self):
         return self.concernCount
 
     def setConcernCount(self, concerns):
-        self.concernCount = concerns
+        try:
+            self.concernCount = int(concerns)
+        except:
+            pass
 
     def __eq__(self, other):
         if other == None:

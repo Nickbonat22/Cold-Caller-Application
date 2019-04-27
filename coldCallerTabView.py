@@ -71,7 +71,7 @@ class ColdCallerTabView(Frame):
         try:
             self._update_portrait_with_name_label(0, pos, portrait_path, name, spelling)
         except KeyError:
-            self._make_portrait_with_name_label(self, 0, pos, name, str(pos) + ': ', portrait_path, spelling)
+            self._make_portrait_with_name_label(self, 0, pos, name, str(pos + 1) + ': ', portrait_path, spelling)
 
     def _create_btns_group_to(self, parent, groupnum, rownum, colnum):
         self.btns_group[groupnum] = Frame(self)
