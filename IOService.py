@@ -4,12 +4,14 @@
 
 import os
 import csv
+from singleton import Singleton
 from student import Student
 from student_queue import Student_queue
 
 
 # Main import function. Takes in a new roster and replaces the old roster.
 # Checks for a new roster in the path "ImportFolder/New Roster.tsv" and replaces "Resources/Internal Roster.tsv".
+@Singleton
 class IO:
     def importRoster(self):
         # Locates the new roster or stops running if there is no new roster.
@@ -149,7 +151,7 @@ class IO:
 
 
 def main():
-    tester = IO()
+    tester = IO.instance()
 
     # Test import roster
     tester.importRoster()
