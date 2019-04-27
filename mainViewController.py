@@ -110,9 +110,11 @@ class MainViewController():
 
     def set_photos_folder_path(self):
         if(self.num_popup == 0):
-            global HOME_PHOTOS_PATH
-            HOME_PHOTOS_PATH = filedialog.askdirectory(title='Choose your Photos directory')
-            self.update_stuents_portrait()
+            tmp = filedialog.askdirectory(title='Choose your Photos directory')
+            if not tmp == None and not tmp == "":
+                global HOME_PHOTOS_PATH
+                HOME_PHOTOS_PATH = tmp
+                self.update_stuents_portrait()
 
     def import_roster_file_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
