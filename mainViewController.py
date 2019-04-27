@@ -96,6 +96,7 @@ class MainViewController():
                     spelling = new_student.getPSpell()
                 else:
                     name = new_student.getNameInitial()
+                global HOME_PHOTOS_PATH
                 self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=name, spelling=spelling, portrait_path=path.join(HOME_PHOTOS_PATH, new_student.getID() + '.png'))
      
     def remove(self, event, pos:int, concern = False):
@@ -106,6 +107,12 @@ class MainViewController():
                     self.update_stuents_portrait()
             else:
                 f.concern_recent_student()
+
+    def set_photos_folder_path(self):
+        if(self.num_popup == 0):
+            global HOME_PHOTOS_PATH
+            HOME_PHOTOS_PATH = filedialog.askdirectory(title='Choose your Photos directory')
+            self.update_stuents_portrait()
 
     def import_roster_file_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
@@ -133,14 +140,15 @@ class MainViewController():
         self.root.config(menu=self.menu)
         self.submenu= Menu(self.menu)
         self.menu.add_cascade(label="Import/Export",menu=self.submenu)
-        self.submenu.add_command(label="Import a roster", command=self.import_roster_file_path_with_name)
-        self.submenu.add_command(label="Export to a roster", command=self.export_roster_file_target_path_with_name)
+        self.submenu.add_command(label="Import a Roster", command=self.import_roster_file_path_with_name)
+        self.submenu.add_command(label="Export to a Roster", command=self.export_roster_file_target_path_with_name)
         self.submenu.add_separator()
         self.submenu.add_command(label="Exit", command=self.root.quit)
 
         self.submenu2 = Menu(self.menu)
         self.menu.add_cascade(label="Misc",menu=self.submenu2)
-        self.submenu2.add_command(label="Font size", command=self.font_size_window)
+        self.submenu2.add_command(label="Set Photos Folder", command=self.set_photos_folder_path)
+        self.submenu2.add_command(label="Font Size", command=self.font_size_window)
         self.submenu2.add_command(label="About", command=self.aboutme_window)
 
     def destory_popup_window_after(self, popup, doing_this_before = None):
