@@ -43,22 +43,22 @@ class IO:
     def importWarning(newStudentQ, oldStudentQ):
         # Populates the list of differences and tells whether the student will be added or removed.
         diffStudentQ = []
-        for x in newStudentQ:
+        for newStudent in newStudentQ:
             isIn = False
-            for y in oldStudentQ:
-                if x == y:
+            for oldStudent in oldStudentQ:
+                if newStudent == oldStudent:
                     isIn = True
-                    x.setCalledOnCount(y.getCalledOnCount())
-                    x.setConcernCount(y.getConcernCount())
+                    newStudent.setCalledOnCount(oldStudent.getCalledOnCount())
+                    newStudent.setConcernCount(oldStudent.getConcernCount())
             if not isIn:
-                diffStudentQ.append((x, "added"))
-        for x in oldStudentQ:
+                diffStudentQ.append((newStudent, "added"))
+        for oldStudent in oldStudentQ:
             isIn = False
-            for y in newStudentQ:
-                if x == y:
+            for newStudent in newStudentQ:
+                if oldStudent == newStudent:
                     isIn = True
             if not isIn:
-                diffStudentQ.append((x, "removed"))
+                diffStudentQ.append((oldStudent, "removed"))
 
         # Stops running if there are no differences. Nothing will change.
         if not diffStudentQ:
@@ -66,14 +66,38 @@ class IO:
 
         # Prints out a warning that changes will be made and lists the changes. Will ask the user to cancel or continue.
         print("WARNING: There are differences between Internal Roster and New Roster:")
-        for (x, code) in diffStudentQ:
-            print(x.getFName() + ' ' + x.getLName() + ' ' + code)
+        for (student, code) in diffStudentQ:
+            print(student.getFName() + ' ' + student.getLName() + ' ' + code)
 
         # Open window showing differences
         # ask if we continue
 
         continueImport = True #response
         return continueImport
+
+    def exportRoster():
+        studentQ = []
+        existingRoster = open("Resources/Internal Roster.tsv", 'r')
+        IO.readFile(studentQ, existingRoster, True)
+
+        output = IO.createFile("ImportFolder/ExportedRoster")
+        output.write("<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
+        IO.writeToFile(studentQ, output, False)
+
+    # code for creating an output file that will not replace/override a file
+    def createFile(fileName):
+        try:
+            output = open(fileName + ".tsv", 'x')
+        except FileExistsError:
+            counter = 1
+            while True:
+                try:
+                    output = open(fileName + "(" + str(counter) + ").tsv", 'x')
+                    break;
+                except FileExistsError:
+                    counter += 1
+
+        return output
 
     def readFile(studentQ, input, importCodes):
         # sys.path = currentSys
@@ -107,7 +131,7 @@ class IO:
                 output.write(student.getPSpell() + '\t')
                 output.write(str(student.getReveal()) + '\n')
         else:
-            for student in newStudentQ:
+            for student in studentQ:
                 output.write(student.getFName() + '\t')
                 output.write(student.getLName() + '\t')
                 output.write(student.getID() + '\t')
@@ -118,7 +142,8 @@ class IO:
 
 
 def main():
-    IO.importRoster()
+    # IO.importRoster()
+    IO.exportRoster()
 
 if __name__ == "__main__":
     main()
