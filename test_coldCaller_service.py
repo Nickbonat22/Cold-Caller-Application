@@ -1,6 +1,18 @@
+#!/usr/bin/env python3
+'''
+Author: JX, NB
+
+Created on: Apr 5, 2019
+
+Last modified by: Jerry Xie @ Apr 27, 2019
+
+Effect: Set environment variables; start the app's GUI
+
+'''
 from student_queue import Student_queue
 from student import Student
 from coldCallerService import ColdCallerService
+from IOService import IO
 from tkinter import *
 from test_coldCaller_scope_helper import testing_scope
 g = testing_scope()
@@ -14,13 +26,13 @@ def update(name_labels):
 def remove(name_labels, pos:int, concern = False):
     global g
     f = ColdCallerService.instance()
-    assert(f.curr_queue.studentQ == g.f.curr_queue.studentQ)
+    f2 = IO.instance()
+    assert(f2.get_curr_queue().studentQ == g.f.get_curr_queue().studentQ)
     if(not concern):
-        if(f.perform_good_at(pos)):
+        if(f.remove_stuent_at(pos)):
             update(name_labels)
     else:
-        if(f.perform_bad_at(pos)):
-            update(name_labels)
+        f.concern_recent_student()
 if __name__ == '__main__':
     f = ColdCallerService.instance()
 

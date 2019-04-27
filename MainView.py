@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 '''
+CIS 422 Project 1
 Author: Jerry Xie
-
-Created on: Apr 5, 2019
-
-Last modified by: Jerry Xie @ Apr 8, 2019
-
-Topic: GUI for Cold Caller
-
-Effect: Demonstrating a GUI demo based on TKinter.
-
+Created on: Apr 14, 2019
+Last modified by: Jerry Xie @ Apr 27, 2019
+Effect: Define widgets in the main window
+            i.e. tab/size/style/position/constraints
 '''
 from tkinter import *
 from tkinter.ttk import *

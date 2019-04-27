@@ -4,11 +4,12 @@ Author: Jerry Xie
 
 Created on: Apr 5, 2019
 
-Last modified by: Jerry Xie @ Apr 9, 2019
+Last modified by: Jerry Xie @ Apr 27, 2019
 
-Topic: Controller for Main View
+Topic: Controller for all Views
 
-Effect: Handle MainView intereaction, response logic
+Effect: Handle views' intereaction, response logic. 
+            i.e. binding functions to buttons
 
 '''
 from tkinter import *
@@ -34,26 +35,33 @@ REMOVE_3 = '3'
 HOME_PHOTOS_PATH = "Resources/Photos"
 
 class MainViewController():
+
     def __init__(self):
+        # Using popup to count how many
+        # popup windows do we have
         self.num_popup = 0
         self.aboutme_popup = None
         self.fontsize_popup = None
 
+        # The root window
         self.root = Tk()
         self.root.title("Cold Caller")
         self.root.geometry("500x500")
+        # Adaptive view setting
         rows = 0
         while rows <= 50:
             self.root.rowconfigure(rows, weight=1)
             self.root.columnconfigure(rows, weight=1)
             rows += 1
 
+        # Add MainView Frame into the root window
         self.mainView = MainView(self.root)
+        # Let it occupy all the window
         self.mainView.grid(row=0, column=0, columnspan=50, rowspan=50, sticky=(N,W,S,E))
+        # Get 2 tab views from the MainView Frame
         self.cold_caller_tab_view = self.mainView.get_cold_caller_tab_view()
+        self.log_tab_view = self.mainView.get_log_tab_view()
 
-        # Call Cold Caller Service to get the first 3 students
-        self.update_stuents_portrait()
         # Bind button/keystrokes to Cold Caller Service APIs
         self.cold_caller_tab_view.createWidgets_bottom_Frame()
         self.cold_caller_tab_view.good_btns[1].bind("<Button-1>", lambda e: self.remove(e, 0))
@@ -78,13 +86,18 @@ class MainViewController():
         self.root.bind(REMOVE_2, lambda e: self.remove(e, 1))
         self.root.bind(REMOVE_3, lambda e: self.remove(e, 2))
 
-        # Load the log file and set log tab's text
-        self.mainView.get_log_tab_view().refresh_log.config(command=lambda: self.mainView.get_log_tab_view().set_text(getDailyLog()))
-        self.mainView.get_log_tab_view().export_summary.config(command=self.export_summary_file_target_path_with_name)
+        # Binding buttons in the log-tab-view
+        self.log_tab_view.refresh_log.config(command=lambda: self.log_tab_view.set_text(getDailyLog()))
+        self.log_tab_view.export_summary.config(command=self.export_summary_file_target_path_with_name)
 
+        # Create the top-bar menu
         self.createMenu()
+
+        # Call Cold Caller Service to get the first 3 students
+        self.update_students_info()
     
-    def update_stuents_portrait(self):
+    # Update students' portrait photos, names, spelling
+    def update_students_info(self):
         f = ColdCallerService.instance()
         for i in range(3):
             new_student = f.get_studnt_at(i)
@@ -97,24 +110,26 @@ class MainViewController():
                 else:
                     name = new_student.getNameInitial()
                 global HOME_PHOTOS_PATH
-                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=name, spelling=spelling, portrait_path=path.join(HOME_PHOTOS_PATH, new_student.getID() + '.png'))
-     
+                self.cold_caller_tab_view.set_Widgets_top_portrait(i, name=name, spelling=spelling, portrait_path=path.join(HOME_PHOTOS_PATH, new_student.getID() + '.png'))
+    
+    # Call cold caller service to remove a student at a certain position
     def remove(self, event, pos:int, concern = False):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             f = ColdCallerService.instance()
             if(not concern):
                 if(f.remove_stuent_at(pos)):
-                    self.update_stuents_portrait()
+                    self.update_students_info()
             else:
                 f.concern_recent_student()
-
+    
+    # The following methods are for the use of top-bar menu
     def set_photos_folder_path(self):
         if(self.num_popup == 0):
             tmp = filedialog.askdirectory(title='Choose your Photos directory')
             if not tmp == None and not tmp == "":
                 global HOME_PHOTOS_PATH
                 HOME_PHOTOS_PATH = tmp
-                self.update_stuents_portrait()
+                self.update_students_info()
 
     def import_roster_file_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
@@ -129,7 +144,8 @@ class MainViewController():
     def export_summary_file_target_path_with_name(self):
         if(self.mainView.nb.index("current") == 1 and self.num_popup == 0):
             target = filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (('TXT', '*.txt'),))
-            summary(target)
+            if not target == None and not target == "":
+                summary(target)
 
     def test_func(self, event, arg = None):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
@@ -179,11 +195,11 @@ class MainViewController():
         
         listbox = Listbox(self.fontsize_popup)
         for i in range(12, 25):listbox.insert(END, i)
-        listbox.select_set(int(self.mainView.get_cold_caller_tab_view().label_font['size']) - 12)
+        listbox.select_set(int(self.cold_caller_tab_view.label_font['size']) - 12)
         listbox.grid(row=0, column=1)
         
         onOk = lambda: self.destory_popup_window_after(self.fontsize_popup, 
-            lambda: self.mainView.get_cold_caller_tab_view().label_font.config(size=listbox.get(ANCHOR)))
+            lambda: self.cold_caller_tab_view.label_font.config(size=listbox.get(ANCHOR)))
         Button(self.fontsize_popup,text='OK',command=onOk).grid(row=1, column=0)
         Button(self.fontsize_popup,text='Cancel',command=onclosing).grid(row=1, column=1)
         self.fontsize_popup.transient(self.root)
@@ -210,6 +226,7 @@ class MainViewController():
         self.aboutme_popup.transient(self.root)
         self.mainView.wait_window(self.aboutme_popup)
     
+    # Render the UI
     def show(self):
         self.root.mainloop()
 

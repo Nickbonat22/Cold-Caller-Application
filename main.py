@@ -4,15 +4,12 @@ Author: Jerry Xie
 
 Created on: Apr 5, 2019
 
-Last modified by: Jerry Xie @ Apr 7, 2019
+Last modified by: Jerry Xie @ Apr 27, 2019
 
-Topic: GUI for Cold Caller
-
-Effect: Demonstrating a GUI demo based on TKinter.
+Effect: Set environment variables; start the app's GUI
 
 '''
 from tkinter import *
-from tkinter.ttk import *
 from mainViewController import MainViewController
 import student_queue
 from os import getenv, path
