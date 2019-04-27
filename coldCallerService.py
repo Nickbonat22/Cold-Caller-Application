@@ -29,8 +29,11 @@ class ColdCallerService:
     
     def get_queue_length(self):
         return self.curr_queue.length()
+    
+    def perform_good(self):
+        self.curr_queue.clear_last_rencent()
 
-    def perform_good_at(self, position : int) -> bool:
+    def remove_stuent_at(self, position : int) -> bool:
         if(self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
             return False
         the_student = self.curr_queue.popfrom(position)
@@ -39,8 +42,8 @@ class ColdCallerService:
         dailyRemove(the_student)
         return True
 
-    def perform_bad_at(self, position : int) -> bool:
-        if(not self.curr_queue.has_recent_student_on_deck() or self.curr_queue.isEmpty() or position >= self.curr_queue.length()):
+    def concern_recent_student(self) -> bool:
+        if(not self.curr_queue.has_recent_student_on_deck() or self.curr_queue.isEmpty()):
             return False
         the_student = self.curr_queue.lastRemove()
         the_student.concernCount += 1

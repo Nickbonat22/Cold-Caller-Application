@@ -87,11 +87,10 @@ class MainViewController():
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             f = ColdCallerService.instance()
             if(not concern):
-                if(f.perform_good_at(pos)):
+                if(f.remove_stuent_at(pos)):
                     self.update_stuents_portrait()
             else:
-                if(f.perform_bad_at(pos)):
-                    self.update_stuents_portrait()
+                f.concern_recent_student()
 
     def test_func(self, event, arg = None):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):

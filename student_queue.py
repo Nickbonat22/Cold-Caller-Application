@@ -38,6 +38,9 @@ class Student_queue:
 
     def length(self):
         return len(self.studentQ)
+    
+    def clear_last_rencent(self):
+        self.recent = None
 
     def popfrom(self,location):
         # this function will remove a student from a specified location
