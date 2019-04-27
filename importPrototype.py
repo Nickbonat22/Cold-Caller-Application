@@ -46,7 +46,7 @@ class importer:
         existingRoster.close()
 
         # Checks if the queues are different. If they are different, we confirm with the user. If they are the same, we stop.
-        if not warning(newStudentQ, oldStudentQ):
+        if not importer.warning(newStudentQ, oldStudentQ):
             return
 
         # Overwrites the existing internal roster with the new information.
@@ -106,7 +106,7 @@ class importer:
 
 
 def main():
-    importRoster()
+    importer.importRoster()
 
 if __name__ == "__main__":
     main()
