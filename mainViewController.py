@@ -20,6 +20,8 @@ from coldCallerService import ColdCallerService
 from student import Student
 from logService import getDailyLog, summary
 
+from os import path
+
 CONCERN_1A = 'c'
 CONCERN_1B = 'v'
 CONCERN_2 = 'b'
@@ -29,6 +31,7 @@ REMOVE_1A = '1'
 REMOVE_1B = '<space>'
 REMOVE_2 = '2'
 REMOVE_3 = '3'
+HOME_PHOTOS_PATH = "Resources/Photos"
 
 class MainViewController():
     def __init__(self):
@@ -89,11 +92,11 @@ class MainViewController():
                 name = ""
                 spelling = ""
                 if new_student.getReveal():
-                    name = new_student.getFName() + " " + new_student.getLName()
+                    name = new_student.getName()
                     spelling = new_student.getPSpell()
                 else:
-                    name = new_student.getFName()[0] + new_student.getLName()[0]
-                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=name, spelling=spelling)
+                    name = new_student.getNameInitial()
+                self.mainView.get_cold_caller_tab_view().set_Widgets_top_portrait(i, name=name, spelling=spelling, portrait_path=path.join(HOME_PHOTOS_PATH, new_student.getID() + '.png'))
      
     def remove(self, event, pos:int, concern = False):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
