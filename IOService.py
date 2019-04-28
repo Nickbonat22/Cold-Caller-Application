@@ -38,7 +38,7 @@ class IO:
         try:
             newRoster = open(filePath, 'r')
         except FileNotFoundError:
-            return 1
+            return (1,)
 
         # Populates the newStudentQ with the list of students from the new roster.
         newStudentQ = []
@@ -50,8 +50,9 @@ class IO:
         self.readFile(oldStudentQ, existingRoster, True)
 
         # Checks if the queues are different. If they are different, we confirm with the user. If they are the same, we stop.
-        if not user_response and not self.importWarning(newStudentQ, oldStudentQ) == None:
-            return 2
+        diff = self.importWarning(newStudentQ, oldStudentQ)
+        if not user_response and not diff  == None:
+            return (2, diff)
 
         # Overwrites the existing internal roster with the new information.
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
@@ -70,7 +71,7 @@ class IO:
             self.readFile(self.curr_queue.studentQ, existingRoster, True)
         # if os.path.exists("ImportFolder/New Roster.tsv"):
         #     os.remove("ImportFolder/New Roster.tsv")
-        return 0
+        return (0,)
 
     # Compares 2 lists of students and confirms changes with the user.
     def importWarning(self, newStudentQ, oldStudentQ):

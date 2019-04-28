@@ -18,6 +18,7 @@ import tkinter.filedialog
 from MainView import *
 from coldCallerTabView import ColdCallerTabView
 from coldCallerService import ColdCallerService
+from IOService import IO
 from student import Student
 from logService import getDailyLog, summary
 
@@ -42,6 +43,8 @@ class MainViewController():
         self.num_popup = 0
         self.aboutme_popup = None
         self.fontsize_popup = None
+        self.not_found_popup = None
+        self.overwrite_popup = None
 
         # The root window
         self.root = Tk()
@@ -93,6 +96,11 @@ class MainViewController():
         # Create the top-bar menu
         self.createMenu()
 
+        def onclosing():
+            IO.instance().set_curr_queue()
+            self.root.destroy()
+        self.root.protocol('WM_DELETE_WINDOW', onclosing)
+
         # Call Cold Caller Service to get the first 3 students
         self.update_students_info()
     
@@ -104,13 +112,16 @@ class MainViewController():
             if not new_student == None:
                 name = ""
                 spelling = ""
+                photo = None
                 if new_student.getReveal():
+                    global HOME_PHOTOS_PATH
                     name = new_student.getName()
                     spelling = new_student.getPSpell()
+                    photo = path.join(HOME_PHOTOS_PATH, new_student.getID() + '.png')
                 else:
                     name = new_student.getNameInitial()
-                global HOME_PHOTOS_PATH
-                self.cold_caller_tab_view.set_Widgets_top_portrait(i, name=name, spelling=spelling, portrait_path=path.join(HOME_PHOTOS_PATH, new_student.getID() + '.png'))
+                
+                self.cold_caller_tab_view.set_Widgets_top_portrait(i, name=name, spelling=spelling, portrait_path=photo)
     
     # Call cold caller service to remove a student at a certain position
     def remove(self, event, pos:int, concern = False):
@@ -131,10 +142,67 @@ class MainViewController():
                 HOME_PHOTOS_PATH = tmp
                 self.update_students_info()
 
+    def not_found_window(self):
+        try:
+            self.not_found_popup.focus_set()
+            return
+        except Exception:
+            pass
+        self.num_popup += 1
+        self.not_found_popup = Toplevel(self.root)
+        self.not_found_popup.title("File Not Found")
+        self.not_found_popup.resizable(0,0)
+
+        explanation = "Unable to open the file you selected"
+
+        onclosing = lambda: self.destory_popup_window_after(self.not_found_popup)
+        self.not_found_popup.protocol('WM_DELETE_WINDOW', onclosing)
+        Label(self.not_found_popup,text=explanation).grid()
+        Button(self.not_found_popup,text='OK',command=onclosing).grid()
+
+        self.not_found_popup.transient(self.root)
+        self.mainView.wait_window(self.not_found_popup)
+    
+    def _import_roster(self):
+        f = IO.instance()
+        f.importRoster(path_with_name, True)
+        self.update_students_info()
+
+    def overwrite_window(self, diff, path_with_name):
+        try:
+            self.overwrite_popup.focus_set()
+            return
+        except Exception:
+            pass
+        self.num_popup += 1
+        self.overwrite_popup = Toplevel(self.root)
+        self.overwrite_popup.title("Overwrite the current roster")
+        self.overwrite_popup.resizable(0,0)
+
+        explanation = "Do you want to overwrite the current roster? The difference between the current roster and the importing roster is:\n"
+        explanation += diff
+
+        onclosing = lambda: self.destory_popup_window_after(self.overwrite_popup)
+        self.overwrite_popup.protocol('WM_DELETE_WINDOW', onclosing)
+        Label(self.overwrite_popup,text=explanation).grid()
+
+        Button(self.overwrite_popup,text='Yes',command=lambda: self.destory_popup_window_after(self.overwrite_popup, self._import_roster)).grid()
+        Button(self.overwrite_popup,text='No',command=onclosing).grid()
+
+        self.overwrite_popup.transient(self.root)
+        self.mainView.wait_window(self.overwrite_popup)
+
     def import_roster_file_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
-            file_name = filedialog.askopenfilename(title='Choose your csv/tsv file', filetypes=(('CSV', '*.csv'),('TSV', '*.tsv')))
-            print(file_name)
+            path_with_file_name = filedialog.askopenfilename(title='Choose your csv/tsv file', filetypes=(('CSV', '*.csv'),('TSV', '*.tsv')))
+            f = IO.instance()
+            rslt = f.importRoster(path_with_file_name)
+            if(rslt[0] == 1):
+                self.not_found_window()
+            elif(rslt[0] == 2):
+                self.overwrite_window(rslt[1], path_with_file_name)
+            else:
+                self.update_students_info()
     
     def export_roster_file_target_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
