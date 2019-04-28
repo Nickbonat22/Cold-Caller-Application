@@ -61,13 +61,12 @@ class ColdCallerTabView(Frame):
     
     def _update_portrait_with_name_label(self, rownum, colnum, new_portrait_path = None, new_name = None, new_spelling = None):
         # Could throw, use with try...except
-        if not new_portrait_path == None:
-            target_portrait_label = self.portraits_labels[colnum]
-            try:
-                self.portraits[colnum] = PhotoImage(file=new_portrait_path)
-            except:
-                self.portraits[colnum] = PhotoImage(file='Resources/default.png')
-            target_portrait_label.config(image=self.portraits[colnum])
+        target_portrait_label = self.portraits_labels[colnum]
+        try:
+            self.portraits[colnum] = PhotoImage(file=new_portrait_path)
+        except:
+            self.portraits[colnum] = PhotoImage(file='Resources/default.png')
+        target_portrait_label.config(image=self.portraits[colnum])
         if not new_spelling == None:
             target_splling_label = self.spellings_labels[colnum]
             target_splling_label.config(text=new_spelling)
