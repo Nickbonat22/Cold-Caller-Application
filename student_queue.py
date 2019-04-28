@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
 '''
 CIS 422 Project 1
-Authors: Jerry Xie, Vu Vo, Qi Han
-Created on: April 15, 2019
-Last modified: April 27, 2019
-Topic: this is an implementation of the data structure used to store students
+Contributors: Jerry Xie, Vu Vo, Qi Han
+Created on: Apr 14, 2019
+Last modified by: Jerry Xie @ Apr 27, 2019
+Effect: This is an implementation of the data structure used to store students
 '''
 from collections import deque
 import random
@@ -28,16 +29,6 @@ class Student_queue:
 
     def isEmpty(self):
         return self.studentQ == []
-
-    def get_first_three(self):# -> Student
-        t = 3
-        rslt = []
-        for student in self.studentQ:
-            if(t == 0):
-                break
-            rslt.append(student)
-            t -= 1
-        return rslt
 
     def length(self):
         return len(self.studentQ)

@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+'''
+CIS 422 Project 1
+Author: Jerry Xie
+Created on: Apr 14, 2019
+Last modified by: Jerry Xie @ Apr 27, 2019
+Effect: Define widgets in the log-tab-view
+            i.e. size/style/position/constraints
+'''
 from tkinter import *
 # from tkinter.ttk import *
 

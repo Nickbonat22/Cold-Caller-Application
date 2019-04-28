@@ -1,8 +1,11 @@
-#   4/14/19 14:00
-#   Created by: Jerry Xie
-#   Contributors: Jerry Xie
-#   Purpose of this code is as a prototype for accessing and modifying the queue class
-
+#!/usr/bin/env python3
+'''
+CIS 422 Project 1
+Author: Jerry Xie
+Created on: Apr 14, 2019
+Last modified by: Jerry Xie @ Apr 27, 2019
+Effect: Provide easy access to remove or concern a student at a cerntain position in the student queue
+'''
 from singleton import Singleton
 from student_queue import Student_queue
 from student import Student
@@ -56,11 +59,8 @@ class ColdCallerService:
         return curr_queue.get_student_at(position)
 
 if __name__ == '__main__':
-    # f = ColdCallerService() # Error, this isn't how you get the instance of a singleton
-    # test = Student("Test","Test","95111111","daa@email.com","Test","sdsd")
-    # print(test)
     f = ColdCallerService.instance() # Good. Being explicit is in line with the Python Zen
     g = ColdCallerService.instance() # Returns already created instance
 
-    print(f is g) # True
+    assert(f is g) # True
     

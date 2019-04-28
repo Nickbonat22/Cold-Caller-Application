@@ -14,6 +14,16 @@ class Student:
         self.calledOnCount = 0
         self.concernCount = 0
 
+    def getName(self):
+        return self.fname + " " + self.lname
+
+    def getNameInitial(self):
+        try:
+            rslt = self.fname[0] + self.lname[0]
+            return rslt
+        except:
+            return ''
+
     def getFName(self):
         return self.fname
 
