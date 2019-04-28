@@ -13,7 +13,7 @@ import csv
 from singleton import Singleton
 from student import Student
 from student_queue import Student_queue
-
+DELIM = '\t'
 
 # Main import function. Takes in a new roster and replaces the old roster.
 # Checks for a new roster in the path "ImportFolder/New Roster.tsv" and replaces "Resources/Internal Roster.tsv".
@@ -31,10 +31,11 @@ class IO:
     def set_curr_queue(self, to_queue):
         self.curr_queue = to_queue
         self.cache(self.curr_queue)
-    def importRoster(self):
+
+    def importRoster(self, filePath):
         # Locates the new roster or stops running if there is no new roster.
         try:
-            newRoster = open("ImportFolder/New Roster.tsv", 'r')
+            newRoster = open(filePath, 'r')
         except FileNotFoundError:
             return
 
@@ -53,7 +54,14 @@ class IO:
 
         # Overwrites the existing internal roster with the new information.
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
-        existingRoster.write("<total times called>\t<times of concern>\t<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
+        existingRoster.write("<total times called>" + DELIM +
+        	"<times of concern>" + DELIM +
+        	"<first name>" + DELIM +
+        	"<last name>" + DELIM +
+        	"<UO ID>" + DELIM +
+        	"<email address>" + DELIM +
+        	"<phonetic spelling>" + DELIM +
+        	"<reveal code>\n")
         self.writeToFile(newStudentQ, existingRoster, True)
         existingRoster.close()
         # if os.path.exists("ImportFolder/New Roster.tsv"):
@@ -96,18 +104,30 @@ class IO:
         continueImport = True #response
         return continueImport
 
-    def exportRoster(self):
+    def exportRoster(self, filePath):
         studentQ = []
         existingRoster = open("Resources/Internal Roster.tsv", 'r')
         self.readFile(studentQ, existingRoster, True)
 
-        output = self.createFile("ImportFolder/ExportedRoster")
-        output.write("<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
+        output = open(filePath, 'w')
+        output.write("<first name>" + DELIM +
+        	"<last name>" + DELIM +
+        	"<UO ID>" + DELIM +
+        	"<email address>" + DELIM +
+        	"<phonetic spelling>" + DELIM +
+        	"<reveal code>\n")
         self.writeToFile(studentQ, output, False)
 
     def cache(self, studentQueue):
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
-        existingRoster.write("<total times called>\t<times of concern>\t<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
+        existingRoster.write("<total times called>" + DELIM +
+        	"<times of concern>" + DELIM +
+        	"<first name>" + DELIM +
+        	"<last name>" + DELIM +
+        	"<UO ID>" + DELIM +
+        	"<email address>" + DELIM +
+        	"<phonetic spelling>" + DELIM +
+       		"<reveal code>\n")
         self.writeToFile(studentQueue.getQueue(), existingRoster, True)
         existingRoster.close()
 
@@ -149,46 +169,46 @@ class IO:
     def writeToFile(self, studentQ, output, printCodes):
         if printCodes:
             for student in studentQ:
-                output.write(str(student.getCalledOnCount()) + '\t')
-                output.write(str(student.getConcernCount()) + '\t')
-                output.write(student.getFName() + '\t')
-                output.write(student.getLName() + '\t')
-                output.write(student.getID() + '\t')
-                output.write(student.getEmail() + '\t')
-                output.write(student.getPSpell() + '\t')
+                output.write(str(student.getCalledOnCount()) + DELIM)
+                output.write(str(student.getConcernCount()) + DELIM)
+                output.write(student.getFName() + DELIM)
+                output.write(student.getLName() + DELIM)
+                output.write(student.getID() + DELIM)
+                output.write(student.getEmail() + DELIM)
+                output.write(student.getPSpell() + DELIM)
                 output.write(str(student.getReveal()) + '\n')
         else:
             for student in studentQ:
-                output.write(student.getFName() + '\t')
-                output.write(student.getLName() + '\t')
-                output.write(student.getID() + '\t')
-                output.write(student.getEmail() + '\t')
-                output.write(student.getPSpell() + '\t')
+                output.write(student.getFName() + DELIM)
+                output.write(student.getLName() + DELIM)
+                output.write(student.getID() + DELIM)
+                output.write(student.getEmail() + DELIM)
+                output.write(student.getPSpell() + DELIM)
                 output.write(str(student.getReveal()) + '\n')
 
 
 
 def main():
-    tester = IO.instance()
+    # tester = IO.instance()
 
-    # Test import roster
-    tester.importRoster()
+    # # Test import roster
+    # tester.importRoster()
 
-    # Test export roster
-    tester.exportRoster()
+    # # Test export roster
+    # tester.exportRoster()
 
-    # Test caching
-    studentQ = []
-    existingRoster = open("Resources/Internal Roster.tsv", 'r')
-    tester.readFile(studentQ, existingRoster, True)
-    workingQueue = Student_queue()
-    workingQueue.setQueue(studentQ)
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    workingQueue.pushRandom(workingQueue.popfrom(1))
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    workingQueue.pushRandom(workingQueue.popfrom(2))
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    tester.cache(workingQueue)
+    # # Test caching
+    # studentQ = []
+    # existingRoster = open("Resources/Internal Roster.tsv", 'r')
+    # tester.readFile(studentQ, existingRoster, True)
+    # workingQueue = Student_queue()
+    # workingQueue.setQueue(studentQ)
+    # workingQueue.pushRandom(workingQueue.popfrom(0))
+    # workingQueue.pushRandom(workingQueue.popfrom(1))
+    # workingQueue.pushRandom(workingQueue.popfrom(0))
+    # workingQueue.pushRandom(workingQueue.popfrom(2))
+    # workingQueue.pushRandom(workingQueue.popfrom(0))
+    # tester.cache(workingQueue)
 
 if __name__ == "__main__":
     main()
