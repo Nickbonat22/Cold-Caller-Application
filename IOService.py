@@ -44,8 +44,8 @@ class IO:
         self.readFile(newStudentQ, newRoster, False)
 
         # Populates the oldStudentQ with the students from the current/existing roster.
-        existingRoster = open("Resources/Internal Roster.tsv", 'r')
         oldStudentQ = []
+        existingRoster = open("Resources/Internal Roster.tsv", 'r')
         self.readFile(oldStudentQ, existingRoster, True)
 
         # Checks if the queues are different. If they are different, we confirm with the user. If they are the same, we stop.
@@ -53,15 +53,9 @@ class IO:
             return
 
         # Overwrites the existing internal roster with the new information.
+        DELIM = '\t'
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
-        existingRoster.write("<total times called>" + DELIM +
-        	"<times of concern>" + DELIM +
-        	"<first name>" + DELIM +
-        	"<last name>" + DELIM +
-        	"<UO ID>" + DELIM +
-        	"<email address>" + DELIM +
-        	"<phonetic spelling>" + DELIM +
-        	"<reveal code>\n")
+        existingRoster.write("<total times called>\t<times of concern>\t<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
         self.writeToFile(newStudentQ, existingRoster, True)
         existingRoster.close()
         # if os.path.exists("ImportFolder/New Roster.tsv"):
@@ -110,26 +104,36 @@ class IO:
         self.readFile(studentQ, existingRoster, True)
 
         output = open(filePath, 'w')
-        output.write("<first name>" + DELIM +
-        	"<last name>" + DELIM +
-        	"<UO ID>" + DELIM +
-        	"<email address>" + DELIM +
-        	"<phonetic spelling>" + DELIM +
+        output.write("<first name>" + DELIM + 
+        	"<last name>" + DELIM + 
+        	"<UO ID>" + DELIM + 
+        	"<email address>" + DELIM + 
+        	"<phonetic spelling>" + DELIM + 
         	"<reveal code>\n")
         self.writeToFile(studentQ, output, False)
 
     def cache(self, studentQueue):
+        DELIM = '\t'
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
-        existingRoster.write("<total times called>" + DELIM +
-        	"<times of concern>" + DELIM +
-        	"<first name>" + DELIM +
-        	"<last name>" + DELIM +
-        	"<UO ID>" + DELIM +
-        	"<email address>" + DELIM +
-        	"<phonetic spelling>" + DELIM +
-       		"<reveal code>\n")
+        existingRoster.write("<total times called>\t<times of concern>\t<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
         self.writeToFile(studentQueue.getQueue(), existingRoster, True)
         existingRoster.close()
+
+    def is_tsv(self, infile):
+	    try:
+	    	DELIM = '\t'
+	    	dialect = csv.Sniffer().sniff(inflie.read(1024), delimeter=DELIM)
+		    infile.seek(0)
+		    return True
+	    except csv.Error:
+	    	try:
+		    	DELIM = ', '
+		    	dialect = csv.Sniffer().sniff(inflie.read(1024))
+			    infile.seek(0)
+			    return True
+		    except csv.Error:
+		    	DELIM = '\t'
+        		return False
 
     # code for creating an output file that will not replace/override a file
     def createFile(self, fileName):
@@ -148,7 +152,10 @@ class IO:
 
     def readFile(self, studentQ, input, importCodes):
         # sys.path = currentSys
-        reader = csv.reader(input, delimiter='\t')
+        if not self.is_tsv(input):
+        	return studentQ
+
+        reader = csv.reader(input, delimiter=DELIM)
         for row in reader:
             if row[-1] == 'X' or row[-1] == "False":
                 reveal = False
