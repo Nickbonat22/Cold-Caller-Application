@@ -1,7 +1,5 @@
 <total times called>	<times of concern>	<first name>	<last name>	<UO ID>	<email address>	<phonetic spelling>	<reveal code>
 0	0	Izzie	Ramirez	950836645	<iramirez@uoregon.edu>	Izee Rameerez	True
-0	0	Theon	Camacho	951548761	<tcamancho@uoregon.edu>	Theeohn Kahmanchoh	True
-0	0	Lexie	East	951727302	<least@uoregon.edu>	Lecksee Eest	False
 0	0	Tiana	Mustafa	951311702	<tmustafa@uoregon.edu>	Teeahnah Mustahfah	True
 0	0	Ivo	Holloway	951576511	<iholloway@uoregon.edu>	Eevo Hohlohway	True
 0	0	Thalia	Barlow	951720296	<tbarlow@uoregon.edu>	Thahliah Bahrloh	True
@@ -18,11 +16,13 @@
 0	0	Jermaine	Pratt	950976615	<jpratt@uoregon.edu>	Jermayne Praht	True
 0	0	Kaylem	Williams	951805749	<kwilliams@uoregon.edu>	Kaylem Williahms	True
 0	0	Ellie-Rose	Pace	951270262	<epace@uoregon.edu>	Ellee-Rohs Payce	True
+1	1	Lexie	East	951727302	<least@uoregon.edu>	Lecksee Eest	False
 0	0	Eamon	Browne	950668466	<ebrowne@uoregon.edu>	Eemohn Brown	True
 0	0	Rex	Taylor	950298707	<rtaylor@uoregon.edu>	Recks Taylohr	False
 0	0	Kaja	Reyes	951819511	<kreyes@uoregon.edu>	Kajha Rayes	True
 0	0	Gia	Swanson	951849529	<gswanson@uoregon.edu>	Jeea Swahnson	True
 0	0	Evelyn	Velazquez	951342579	<evalazquez@uoregon.edu>	Ehvalin Velahzquehz	True
+1	0	Theon	Camacho	951548761	<tcamancho@uoregon.edu>	Theeohn Kahmanchoh	True
 0	0	Kunal	Drummond	950231787	<kdrummond@uoregon.edu>	Koonahl Druhmand	False
 0	0	Keenan	Rayner	951085707	<krayner@uoregon.edu>	Keenan Raynor	True
 0	0	Abiha	Hoover	950888802	<ahoover@uoregon.edu>	Abeeha Hoover	True

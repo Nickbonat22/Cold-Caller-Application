@@ -6,6 +6,7 @@ Created on: Apr 14, 2019
 Last modified by: Jerry Xie @ Apr 27, 2019
 Effect: Provide easy access to remove or concern a student at a cerntain position in the student queue
 '''
+from time import time
 from singleton import Singleton
 from student_queue import Student_queue
 from student import Student
@@ -19,6 +20,7 @@ from IOService import IO
 
 @Singleton
 class ColdCallerService:
+    last_remove_time = time()
     def get_queue_length(self):
         return IO.instance().get_curr_queue().length()
     
@@ -34,16 +36,20 @@ class ColdCallerService:
         curr_queue.pushRandom(the_student)
         dailyRemove(the_student)
         IO.instance().set_curr_queue(curr_queue)
+        self.last_remove_time = time()
         return True
 
     def concern_recent_student(self) -> bool:
-        curr_queue = IO.instance().get_curr_queue()
-        if(not curr_queue.has_recent_student_on_deck() or curr_queue.isEmpty()):
-            return False
-        the_student = curr_queue.lastRemove()
-        the_student.concernCount += 1
-        dailyConcern(the_student)
-        return True
+        now = time()
+        if now - self.last_remove_time <= 2:
+            curr_queue = IO.instance().get_curr_queue()
+            if(not curr_queue.has_recent_student_on_deck() or curr_queue.isEmpty()):
+                return False
+            the_student = curr_queue.lastRemove()
+            the_student.concernCount += 1
+            dailyConcern(the_student)
+            return True
+        return False
     
     def get_studnt_at(self, position : int) -> Student:
         curr_queue = IO.instance().get_curr_queue()
