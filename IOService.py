@@ -28,39 +28,49 @@ class IO:
     def get_curr_queue(self): 
         return self.curr_queue
     
-    def set_curr_queue(self, to_queue):
-        self.curr_queue = to_queue
+    def set_curr_queue(self, to_queue = None):
+        if not to_queue == None:
+            self.curr_queue = to_queue
         self.cache(self.curr_queue)
 
-    def importRoster(self, filePath):
+    def importRoster(self, filePath, user_response = False):
         # Locates the new roster or stops running if there is no new roster.
         try:
             newRoster = open(filePath, 'r')
         except FileNotFoundError:
-            return
+            return 1
 
         # Populates the newStudentQ with the list of students from the new roster.
         newStudentQ = []
         self.readFile(newStudentQ, newRoster, False)
 
         # Populates the oldStudentQ with the students from the current/existing roster.
-        oldStudentQ = []
         existingRoster = open("Resources/Internal Roster.tsv", 'r')
+        oldStudentQ = []
         self.readFile(oldStudentQ, existingRoster, True)
 
         # Checks if the queues are different. If they are different, we confirm with the user. If they are the same, we stop.
-        if not self.importWarning(newStudentQ, oldStudentQ):
-            return
+        if not user_response and not self.importWarning(newStudentQ, oldStudentQ) == None:
+            return 2
 
         # Overwrites the existing internal roster with the new information.
-        DELIM = '\t'
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
-        existingRoster.write("<total times called>\t<times of concern>\t<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
+        existingRoster.write("<total times called>" + DELIM +
+            "<times of concern>" + DELIM +
+            "<first name>" + DELIM +
+            "<last name>" + DELIM +
+            "<UO ID>" + DELIM +
+            "<email address>" + DELIM +
+            "<phonetic spelling>" + DELIM +
+            "<reveal code>\n")
         self.writeToFile(newStudentQ, existingRoster, True)
         existingRoster.close()
+
+        with open("Resources/Internal Roster.tsv", 'r') as existingRoster:
+            self.readFile(self.curr_queue.studentQ, existingRoster, True)
         # if os.path.exists("ImportFolder/New Roster.tsv"):
         #     os.remove("ImportFolder/New Roster.tsv")
-        return
+        return 0
 
     # Compares 2 lists of students and confirms changes with the user.
     def importWarning(self, newStudentQ, oldStudentQ):
@@ -85,19 +95,14 @@ class IO:
 
         # Stops running if there are no differences. Nothing will change.
         if not diffStudentQ:
-            return False
+            return None
 
-        # Prints out a warning that changes will be made and lists the changes. Will ask the user to cancel or continue.
-        print("WARNING: There are differences between Internal Roster and New Roster:")
+        diff = ""
         for (student, code) in diffStudentQ:
-            print(student.getFName() + ' ' + student.getLName() + ' ' + code)
-
-        # Open window showing differences
-        # ask if we continue
-
-        continueImport = True #response
-        return continueImport
-
+            diff += student.getFName() + ' ' + student.getLName() + ' ' + code
+            diff += '\n'        
+        return diff
+        
     def exportRoster(self, filePath):
         studentQ = []
         existingRoster = open("Resources/Internal Roster.tsv", 'r')
