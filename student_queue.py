@@ -22,7 +22,7 @@ class Student_queue:
     def __str__(self):
         rslt = ''
         for student in self.studentQ:
-            rslt += student.getFName() + student.getLName()
+            rslt += str(student)
             rslt += '->'
         return rslt
    

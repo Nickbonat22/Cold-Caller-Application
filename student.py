@@ -59,7 +59,9 @@ class Student:
             self.concernCount = int(concerns)
         except:
             pass
-
+    
+    def __str__(self):
+        return self.fname + ' ' + self.lname
     def __eq__(self, other):
         if other == None:
             return False

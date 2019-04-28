@@ -163,9 +163,8 @@ class MainViewController():
         self.not_found_popup.transient(self.root)
         self.mainView.wait_window(self.not_found_popup)
     
-    def _import_roster(self):
-        f = IO.instance()
-        f.importRoster(path_with_name, True)
+    def _import_roster(self, path_with_name):
+        IO.instance().importRoster(path_with_name, True)
         self.update_students_info()
 
     def overwrite_window(self, diff, path_with_name):
@@ -186,7 +185,7 @@ class MainViewController():
         self.overwrite_popup.protocol('WM_DELETE_WINDOW', onclosing)
         Label(self.overwrite_popup,text=explanation).grid()
 
-        Button(self.overwrite_popup,text='Yes',command=lambda: self.destory_popup_window_after(self.overwrite_popup, self._import_roster)).grid()
+        Button(self.overwrite_popup,text='Yes',command=lambda: self.destory_popup_window_after(self.overwrite_popup, lambda:self._import_roster(path_with_name))).grid()
         Button(self.overwrite_popup,text='No',command=onclosing).grid()
 
         self.overwrite_popup.transient(self.root)
@@ -195,8 +194,7 @@ class MainViewController():
     def import_roster_file_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             path_with_file_name = filedialog.askopenfilename(title='Choose your csv/tsv file', filetypes=(('CSV', '*.csv'),('TSV', '*.tsv')))
-            f = IO.instance()
-            rslt = f.importRoster(path_with_file_name)
+            rslt = IO.instance().importRoster(path_with_file_name)
             if(rslt[0] == 1):
                 self.not_found_window()
             elif(rslt[0] == 2):
