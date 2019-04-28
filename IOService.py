@@ -105,11 +105,11 @@ class IO:
 
         output = open(filePath, 'w')
         output.write("<first name>" + DELIM + 
-        	"<last name>" + DELIM + 
-        	"<UO ID>" + DELIM + 
-        	"<email address>" + DELIM + 
-        	"<phonetic spelling>" + DELIM + 
-        	"<reveal code>\n")
+            "<last name>" + DELIM + 
+            "<UO ID>" + DELIM + 
+            "<email address>" + DELIM + 
+            "<phonetic spelling>" + DELIM + 
+            "<reveal code>\n")
         self.writeToFile(studentQ, output, False)
 
     def cache(self, studentQueue):
@@ -120,20 +120,20 @@ class IO:
         existingRoster.close()
 
     def is_tsv(self, infile):
-	    try:
-	    	DELIM = '\t'
-	    	dialect = csv.Sniffer().sniff(inflie.read(1024), delimeter=DELIM)
-		    infile.seek(0)
-		    return True
-	    except csv.Error:
-	    	try:
-		    	DELIM = ', '
-		    	dialect = csv.Sniffer().sniff(inflie.read(1024))
-			    infile.seek(0)
-			    return True
-		    except csv.Error:
-		    	DELIM = '\t'
-        		return False
+        try:
+            DELIM = '\t'
+            dialect = csv.Sniffer().sniff(infile.read(1024), delimiters=DELIM)
+            infile.seek(0)
+            return True
+        except csv.Error:
+            try:
+                DELIM = ', '
+                dialect = csv.Sniffer().sniff(infile.read(1024))
+                infile.seek(0)
+                return True
+            except csv.Error:
+                DELIM = '\t'
+                return False
 
     # code for creating an output file that will not replace/override a file
     def createFile(self, fileName):
@@ -153,7 +153,7 @@ class IO:
     def readFile(self, studentQ, input, importCodes):
         # sys.path = currentSys
         if not self.is_tsv(input):
-        	return studentQ
+            return studentQ
 
         reader = csv.reader(input, delimiter=DELIM)
         for row in reader:
@@ -196,26 +196,26 @@ class IO:
 
 
 def main():
-    # tester = IO.instance()
+    tester = IO.instance()
 
-    # # Test import roster
-    # tester.importRoster()
+    # Test import roster
+    tester.importRoster("/ImportFolder/New Roster.tsv")
 
-    # # Test export roster
-    # tester.exportRoster()
+    # Test export roster
+    tester.exportRoster("ImportFolder/Exported Roster.tsv")
 
-    # # Test caching
-    # studentQ = []
-    # existingRoster = open("Resources/Internal Roster.tsv", 'r')
-    # tester.readFile(studentQ, existingRoster, True)
-    # workingQueue = Student_queue()
-    # workingQueue.setQueue(studentQ)
-    # workingQueue.pushRandom(workingQueue.popfrom(0))
-    # workingQueue.pushRandom(workingQueue.popfrom(1))
-    # workingQueue.pushRandom(workingQueue.popfrom(0))
-    # workingQueue.pushRandom(workingQueue.popfrom(2))
-    # workingQueue.pushRandom(workingQueue.popfrom(0))
-    # tester.cache(workingQueue)
+    # Test caching
+    studentQ = []
+    existingRoster = open("Resources/Internal Roster.tsv", 'r')
+    tester.readFile(studentQ, existingRoster, True)
+    workingQueue = Student_queue()
+    workingQueue.setQueue(studentQ)
+    workingQueue.pushRandom(workingQueue.popfrom(0))
+    workingQueue.pushRandom(workingQueue.popfrom(1))
+    workingQueue.pushRandom(workingQueue.popfrom(0))
+    workingQueue.pushRandom(workingQueue.popfrom(2))
+    workingQueue.pushRandom(workingQueue.popfrom(0))
+    tester.cache(workingQueue)
 
 if __name__ == "__main__":
     main()
