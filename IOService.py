@@ -65,6 +65,13 @@ class IO:
             diff = self.importWarning(newStudentQ, oldStudentQ)
             if not diff  == None:
                 return (2, diff)
+        
+        for newStudent in newStudentQ:
+            for oldStudent in oldStudentQ:
+                if newStudent.getID() == oldStudent.getID():
+                    newStudent.setCalledOnCount(oldStudent.getCalledOnCount())
+                    newStudent.setConcernCount(oldStudent.getConcernCount())
+
 
         # Overwrites the existing internal roster with the new information.
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
@@ -93,8 +100,6 @@ class IO:
             for oldStudent in oldStudentQ:
                 if newStudent == oldStudent:
                     isIn = True
-                    newStudent.setCalledOnCount(oldStudent.getCalledOnCount())
-                    newStudent.setConcernCount(oldStudent.getConcernCount())
             if not isIn:
                 diffStudentQ.append((newStudent, "added"))
         for oldStudent in oldStudentQ:
@@ -132,7 +137,14 @@ class IO:
     def cache(self, studentQueue):
         DELIM = '\t'
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
-        existingRoster.write("<total times called>\t<times of concern>\t<first name>\t<last name>\t<UO ID>\t<email address>\t<phonetic spelling>\t<reveal code>\n")
+        existingRoster.write("<total times called>" + DELIM +
+            "<times of concern>" + DELIM + 
+            "<first name>"+ DELIM +
+            "<last name>"+ DELIM +
+            "<UO ID>"+ DELIM +
+            "<email address>"+ DELIM +
+            "<phonetic spelling>"+ DELIM +
+            "<reveal code>\n")
         self.writeToFile(studentQueue.getQueue(), existingRoster, True)
         existingRoster.close()
 

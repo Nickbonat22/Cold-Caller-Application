@@ -12,8 +12,10 @@ Effect: Set environment variables; start the app's GUI
 from tkinter import *
 from mainViewController import MainViewController
 import student_queue
+import IOService
 from os import getenv, path
 student_queue.REINSERTION_AFTER_FIRST_N_PERCENT = 50
+IOService.DELIM = '\t'
 
 MainViewController.CONCERN_1A = 'c'
 MainViewController.CONCERN_1B = 'v'

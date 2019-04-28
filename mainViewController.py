@@ -205,7 +205,7 @@ class MainViewController():
     def export_roster_file_target_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             target = filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (('CSV', '*.csv'),('TSV', '*.tsv')))
-            print(target)
+            IO.instance().exportRoster(target)
     
     def export_summary_file_target_path_with_name(self):
         if(self.mainView.nb.index("current") == 1 and self.num_popup == 0):
