@@ -3,7 +3,7 @@
 CIS 422 Project 1
 Contributors: Jerry Xie, Vu Vo, Qi Han
 Created on: Apr 14, 2019
-Last modified by: Jerry Xie @ Apr 27, 2019
+Last modified by: Qi Han @ Apr 28, 2019 
 Effect: This is an implementation of the data structure used to store students
 '''
 from collections import deque
@@ -11,28 +11,34 @@ import random
 import math
 import functools
 REINSERTION_AFTER_FIRST_N_PERCENT = 30
+
 class Student_queue:
     #studentQ = [] # [Student]
     def __init__(self):
         self.studentQ = []
         self.recent = None
     
+    # get students' first and last name
     def __str__(self):
         rslt = ''
         for student in self.studentQ:
             rslt += student.getFName() + student.getLName()
             rslt += '->'
         return rslt
-    
+   
+    # check if recent student variable is empty
     def has_recent_student_on_deck(self):
         return not self.recent == None
 
+    # check if the student queue is empty
     def isEmpty(self):
         return self.studentQ == []
 
+    # return the length of the students queue
     def length(self):
         return len(self.studentQ)
     
+    # reset recent stduent variable
     def clear_last_rencent(self):
         self.recent = None
 
@@ -43,9 +49,7 @@ class Student_queue:
         self.recent = self.studentQ.pop(location)
         return self.recent
 
-    def length(self):
-        return len(self.studentQ)
-
+    # return the last removed student
     def lastRemove(self):
         return self.recent
 
@@ -57,12 +61,15 @@ class Student_queue:
         lower_bound = math.floor(len(self.studentQ) * REINSERTION_AFTER_FIRST_N_PERCENT / 100)
         value = random.randint(lower_bound, len(self.studentQ))
         self.studentQ.insert(value,student)
-
+   
+    # peek from the certain position 
     def get_student_at(self, position):
         return self.studentQ[position]
 
+    # set student queue
     def setQueue(self, studentList):
         self.studentQ = studentList
 
+    # return student queue
     def getQueue(self):
         return self.studentQ
