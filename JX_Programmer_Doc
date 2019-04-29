@@ -3,7 +3,7 @@ student.py: The atom data structure of this project, capturing the essential inf
 student_queue.py: The queue data structure designed specifically for this project, providing easy access to pop a student from a position on deck and reinsert the student back to the queue(after the first certain percent).
 
 Service:
-coldCallerService.py: Provide easy access to remove or concern a student at a cerntain position in the student queue
+coldCallerService.py: This is where the core logic of the app live in and it provides us the easy access to remove or concern a student at a cerntain position in the student queue.
 IOService.py: Provide easy access to import a roster CSV or TSV file into the student queue, and export the student queue into a roster CSV or TSV file.
 LogService.py: Generate the daily log and summary log of the app.
 
