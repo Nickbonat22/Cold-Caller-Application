@@ -1,17 +1,30 @@
+This documentation would demonstrate the structure of Cold Caller app and shows possible ways to improve the code for anyone with interest. The following would be the outline of the app:
+1. Model
+2. Service
+3. Views
+4. Controller
+
 Model:
+The following are the models we used in the app:
 student.py: The atom data structure of this project, capturing the essential information about a student.
 student_queue.py: The queue data structure designed specifically for this project, providing easy access to pop a student from a position on deck and reinsert the student back to the queue(after the first certain percent).
+Possible performance bottleneck could exist in student_queue.py; because it is using a list, the variable "self.studentQ", to contain all the student objects, and some methods of the class would have a O(n) time complexity such as "popfrom(Int)" and "pushRandom(Student)".
 
 Service:
-coldCallerService.py: This is where the core logic of the app live in and it provides us the easy access to remove or concern a student at a cerntain position in the student queue.
-IOService.py: Provide easy access to import a roster CSV or TSV file into the student queue, and export the student queue into a roster CSV or TSV file.
+coldCallerService.py: This is where the core logic of the app live in and it provides us the easy access to remove or concern a student at a certain position in the student queue.
+IOService.py: Provide easy access to import a roster CSV or TSV file into the student queue and export the student queue into a roster CSV or TSV file.
 LogService.py: Generate the daily log and summary log of the app.
+ColdCallerService is highly relying on IOService to get the student queue, there might be a tight coupling between these two services.
+Possible performance bottleneck could exist in IOService.py, especially in methods handling the comparison between the importing queue and the current queue when importing a roster, which has O(n^2) time complexities. One possible solution to that is adding a checksum method/property to the student_queue class, it would still be O(n^2) time complexity at the startup, but constant time after that.
 
 Views:
-MainView.py: A well defined frame including two tab views, namely ColdCallerTabView and LogTabView.
-coldCallerTabView.py: A well defined frame displaying students on deck, and corresponding interacting buttons.
-logTabView.py: A well defined frame displaying the daily log, and two buttons used to export the summary log and refresh the daily log.
+MainView.py: A well-defined frame including two tab views, namely ColdCallerTabView and LogTabView.
+coldCallerTabView.py: A well-defined frame displaying students on deck, and corresponding interacting buttons.
+logTabView.py: A well-defined frame displaying the daily log, and two buttons used to export the summary log and refresh the daily log.
+All the views are using the Tkinter Grid Geometry Manager; each widget is put into a "cell" with a unique coordinate in terms of rows and columns. Note that you can set a relative coordinate to the master, and the Grid Geometry Manager would automatically handle its absolute coordinate and place it in the right place.
+Since we only initialize and define widgets' position in the views, there should not be any performance bottleneck existing here.
 
 Controllers:
 mainViewController.py: Handle the interactions of widgets in the MainView, such as command in the top-bar menu, buttons in the views, and keystrokes mapping.
-main.py: In additon to running the app, users can set roster delimiter(csv or tsv), keystrokes mapping here.
+main.py: In addition to running the app, users can set roster delimiter(csv or tsv), keystrokes mapping here.
+The mainViewController.py might seem like a long file, but essentially it only does things such as binding buttons to a service function, or defining a popup window and wait for user's interaction. As a result, there should not be any performance bottleneck existing here.
