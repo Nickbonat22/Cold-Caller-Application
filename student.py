@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
 '''
 April 7
 Author: Nicholas Bonat
+Created on: Apr 7, 2019
+Class to hold and get student information
 '''
 
 class Student:
