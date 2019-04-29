@@ -40,6 +40,9 @@ class ColdCallerTabView(Frame):
             self.portraits[colnum] = PhotoImage(file=portrait_path)
         except:
             self.portraits[colnum] = PhotoImage(file='Resources/default.png')
+        scale_w = 200//self.portraits[colnum].width()
+        scale_h = 200//self.portraits[colnum].height()
+        self.portraits[colnum].zoom(scale_w, scale_h)
         self.portraits_labels[colnum] = Label(frame, image=self.portraits[colnum])
         self.portraits_labels[colnum].grid(row=0, column=0, sticky=(N, S, E, W), columnspan=2)
 

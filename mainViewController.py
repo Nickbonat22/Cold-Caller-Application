@@ -14,7 +14,6 @@ Effect: Handle views' intereaction, response logic.
 '''
 from tkinter import *
 import tkinter.filedialog
-# from tkinter.ttk import *
 from MainView import *
 from coldCallerTabView import ColdCallerTabView
 from coldCallerService import ColdCallerService
@@ -24,6 +23,7 @@ from logService import getDailyLog, summary
 
 from os import path
 
+# Define keystroke mapping
 CONCERN_1A = 'c'
 CONCERN_1B = 'v'
 CONCERN_2 = 'b'
@@ -33,12 +33,13 @@ REMOVE_1A = '1'
 REMOVE_1B = '<space>'
 REMOVE_2 = '2'
 REMOVE_3 = '3'
+# Define Students portrait photos' folder
 HOME_PHOTOS_PATH = "Resources/Photos"
 
 class MainViewController():
 
     def __init__(self):
-        # Using popup to count how many
+        # Using num_popup to count how many
         # popup windows do we have
         self.num_popup = 0
         self.aboutme_popup = None
@@ -50,6 +51,7 @@ class MainViewController():
         self.root = Tk()
         self.root.title("Cold Caller")
         self.root.geometry("500x500")
+
         # Adaptive view setting
         rows = 0
         while rows <= 50:
@@ -96,6 +98,7 @@ class MainViewController():
         # Create the top-bar menu
         self.createMenu()
 
+        # When closing the app, save the queue
         def onclosing():
             IO.instance().set_curr_queue()
             self.root.destroy()
@@ -113,17 +116,21 @@ class MainViewController():
                 name = ""
                 spelling = ""
                 photo = None
+                # If this student doesn't have privacy protection
+                # Show his/her name, photo, spelling
                 if new_student.getReveal():
                     global HOME_PHOTOS_PATH
                     name = new_student.getName()
                     spelling = new_student.getPSpell()
                     photo = path.join(HOME_PHOTOS_PATH, new_student.getID() + '.png')
+                # Otherwise, only show his/her initials
                 else:
                     name = new_student.getNameInitial()
                 
                 self.cold_caller_tab_view.set_Widgets_top_portrait(i, name=name, spelling=spelling, portrait_path=photo)
     
     # Call cold caller service to remove a student at a certain position
+    # and then update the view
     def remove(self, event, pos:int, concern = False):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             f = ColdCallerService.instance()
@@ -134,20 +141,28 @@ class MainViewController():
                 f.concern_recent_student()
     
     # The following methods are for the use of top-bar menu
-    def set_photos_folder_path(self):
-        if(self.num_popup == 0):
-            tmp = filedialog.askdirectory(title='Choose your Photos directory')
-            if not tmp == None and not tmp == "":
-                global HOME_PHOTOS_PATH
-                HOME_PHOTOS_PATH = tmp
-                self.update_students_info()
-
+    #
+    # Destory a popup window after doing a certain job
+    def destory_popup_window_after(self, popup, doing_this_before = None):
+        if not doing_this_before == None:
+            try:
+                doing_this_before()
+            except Exception as e:
+                print(e)
+        popup.destroy()
+        self.num_popup -= 1
+    
+    # When importing a roster, if that file is not found
+    # fire this window
     def not_found_window(self):
+        # If there is an active popup window
+        # Foucus on it
         try:
             self.not_found_popup.focus_set()
             return
         except Exception:
             pass
+        # Otherwise create a new one
         self.num_popup += 1
         self.not_found_popup = Toplevel(self.root)
         self.not_found_popup.title("File Not Found")
@@ -163,10 +178,13 @@ class MainViewController():
         self.not_found_popup.transient(self.root)
         self.mainView.wait_window(self.not_found_popup)
     
+    # Call IOService and pass the importing file path to it
     def _import_roster(self, path_with_name):
         IO.instance().importRoster(path_with_name, True)
         self.update_students_info()
 
+    # Display the difference between current roster and the importing roster
+    # and ask whether to overwrite the current roster
     def overwrite_window(self, diff, path_with_name):
         try:
             self.overwrite_popup.focus_set()
@@ -191,6 +209,7 @@ class MainViewController():
         self.overwrite_popup.transient(self.root)
         self.mainView.wait_window(self.overwrite_popup)
 
+    # Use a file dialog to let the user choose a roster to import
     def import_roster_file_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             path_with_file_name = filedialog.askopenfilename(title='Choose your csv/tsv file', filetypes=(('CSV', '*.csv'),('TSV', '*.tsv')))
@@ -202,48 +221,29 @@ class MainViewController():
             else:
                 self.update_students_info()
     
+    # Use a file dialog to let the user choose a directory to export the roster
     def export_roster_file_target_path_with_name(self):
         if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
             target = filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (('CSV', '*.csv'),('TSV', '*.tsv')))
             IO.instance().exportRoster(target)
     
+    # Use a file dialog to let the user choose a directory to export the summary log
     def export_summary_file_target_path_with_name(self):
         if(self.mainView.nb.index("current") == 1 and self.num_popup == 0):
             target = filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (('TXT', '*.txt'),))
             if not target == None and not target == "":
                 summary(target)
-
-    def test_func(self, event, arg = None):
-        if(self.mainView.nb.index("current") == 0 and self.num_popup == 0):
-            print("It worked in the tab", event.type)
-            if(not arg == None):
-                print("Arguments passed", arg)
     
-    def createMenu(self):
-        self.menu = Menu(self.root)
-        self.root.config(menu=self.menu)
-        self.submenu= Menu(self.menu)
-        self.menu.add_cascade(label="Import/Export",menu=self.submenu)
-        self.submenu.add_command(label="Import a Roster", command=self.import_roster_file_path_with_name)
-        self.submenu.add_command(label="Export to a Roster", command=self.export_roster_file_target_path_with_name)
-        self.submenu.add_separator()
-        self.submenu.add_command(label="Exit", command=self.root.quit)
-
-        self.submenu2 = Menu(self.menu)
-        self.menu.add_cascade(label="Misc",menu=self.submenu2)
-        self.submenu2.add_command(label="Set Photos Folder", command=self.set_photos_folder_path)
-        self.submenu2.add_command(label="Font Size", command=self.font_size_window)
-        self.submenu2.add_command(label="About", command=self.aboutme_window)
-
-    def destory_popup_window_after(self, popup, doing_this_before = None):
-        if not doing_this_before == None:
-            try:
-                doing_this_before()
-            except Exception as e:
-                print(e)
-        popup.destroy()
-        self.num_popup -= 1
+    # User a file dialog to let the user choose a directory to read students' portraits
+    def set_photos_folder_path(self):
+        if(self.num_popup == 0):
+            tmp = filedialog.askdirectory(title='Choose your Photos directory')
+            if not tmp == None and not tmp == "":
+                global HOME_PHOTOS_PATH
+                HOME_PHOTOS_PATH = tmp
+                self.update_students_info()
     
+    # Let the user select the font size of name label
     def font_size_window(self):
         try:
             self.font_size_window.focus_set()
@@ -271,6 +271,7 @@ class MainViewController():
         self.fontsize_popup.transient(self.root)
         self.mainView.wait_window(self.fontsize_popup)
 
+    # About me
     def aboutme_window(self):
         try:
             self.aboutme_popup.focus_set()
@@ -291,6 +292,23 @@ class MainViewController():
 
         self.aboutme_popup.transient(self.root)
         self.mainView.wait_window(self.aboutme_popup)
+    
+    def createMenu(self):
+        self.menu = Menu(self.root)
+        self.root.config(menu=self.menu)
+        self.submenu= Menu(self.menu)
+        self.menu.add_cascade(label="Import/Export",menu=self.submenu)
+        self.submenu.add_command(label="Import a Roster", command=self.import_roster_file_path_with_name)
+        self.submenu.add_command(label="Export to a Roster", command=self.export_roster_file_target_path_with_name)
+        self.submenu.add_separator()
+        self.submenu.add_command(label="Exit", command=self.root.quit)
+
+        self.submenu2 = Menu(self.menu)
+        self.menu.add_cascade(label="Misc",menu=self.submenu2)
+        self.submenu2.add_command(label="Set Photos Folder", command=self.set_photos_folder_path)
+        self.submenu2.add_command(label="Font Size", command=self.font_size_window)
+        self.submenu2.add_command(label="About", command=self.aboutme_window)
+    
     
     # Render the UI
     def show(self):

@@ -13,20 +13,15 @@ from student import Student
 from logService import dailyRemove, dailyConcern
 from IOService import IO
 
-# By runing "python3 coldCallerService.py"
-# You should see :
-# Cold Caller Service started
-# True
-
 @Singleton
 class ColdCallerService:
+    # For implementation of "...press the concern button within 1 second..."
     last_remove_time = time()
+
     def get_queue_length(self):
         return IO.instance().get_curr_queue().length()
     
-    def perform_good(self):
-        IO.instance().get_curr_queue().clear_last_rencent()
-
+    # Remove a student at a certain position and reinsert him/her to the back of the queue randomly
     def remove_stuent_at(self, position : int) -> bool:
         curr_queue = IO.instance().get_curr_queue()
         if(curr_queue.isEmpty() or position >= curr_queue.length()):
@@ -39,6 +34,7 @@ class ColdCallerService:
         self.last_remove_time = time()
         return True
 
+    # Concern the last remove student if it is called within 1 second of calling the remove function
     def concern_recent_student(self) -> bool:
         now = time()
         if now - self.last_remove_time <= 2:
@@ -51,6 +47,7 @@ class ColdCallerService:
             return True
         return False
     
+    # Return a student at the certain position
     def get_studnt_at(self, position : int) -> Student:
         curr_queue = IO.instance().get_curr_queue()
         if(curr_queue.isEmpty() or position >= curr_queue.length()):
