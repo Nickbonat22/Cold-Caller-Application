@@ -1,0 +1,17 @@
+Model:
+student.py: The atom data structure of this project, capturing the essential information about a student.
+student_queue.py: The queue data structure designed specifically for this project, providing easy access to pop a student from a position on deck and reinsert the student back to the queue(after the first certain percent).
+
+Service:
+coldCallerService.py: Provide easy access to remove or concern a student at a cerntain position in the student queue
+IOService.py: Provide easy access to import a roster CSV or TSV file into the student queue, and export the student queue into a roster CSV or TSV file.
+LogService.py: Generate the daily log and summary log of the app.
+
+Views:
+MainView.py: A well defined frame including two tab views, namely ColdCallerTabView and LogTabView.
+coldCallerTabView.py: A well defined frame displaying students on deck, and corresponding interacting buttons.
+logTabView.py: A well defined frame displaying the daily log, and two buttons used to export the summary log and refresh the daily log.
+
+Controllers:
+mainViewController.py: Handle the interactions of widgets in the MainView, such as command in the top-bar menu, buttons in the views, and keystrokes mapping.
+main.py: In additon to running the app, users can set roster delimiter(csv or tsv), keystrokes mapping here.
