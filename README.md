@@ -1,12 +1,17 @@
-#This program was created for project 1 of CIS 422,Software Methodologies.
+#This program was created for project 1 of CIS 422,Software Methodologies
+
 ##Brief description: 
 This Cold-Caller software takes in the Roster.tsv file as input, generate a list of randomly chosen students to be cold-called on, display those students on the screen, and record the students' performance which will be exported in a daily log file.
+
 ##Authors: 
 Nick Bonat, Jerry Xie, Vu Vo, Qi Han, Zach Domke
+
 ##Creation date: 
 April 1, 2019
+
 ##Target OS: 
 MacOS 10.13 and above
+
 ##Usage: 
 - First try whether the built app in dist/ works, if not then
 - from the root directory of the project, run:
