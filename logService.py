@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 '''
-4-7-2019
 Author: Nicholas Bonat
+Created on: 4-7-2019
 Create daily log file and write to it
 '''
 
@@ -8,27 +9,28 @@ from student import Student
 import datetime
 import sys
 import csv
-
+import os
+HOME_PATH = os.getenv('HOME')
 sys.path.append('../Resources/')
 
 #open file, the current date to the daily log, then close it so it can be read in full
 now = datetime.datetime.now()
-with open('dailylog.txt', 'w+') as file:
+with open(os.path.join(HOME_PATH, 'dailylog.txt'), 'w+') as file:
 	file.write('Cold Caller Daily Log\n')
 	file.write(now.strftime("%m-%d-%Y\n\n"))
 
 #open file, add first/last/email, close file
 def dailyRemove(name):
-	with open('dailylog.txt', 'a') as file:
+	with open(os.path.join(HOME_PATH, 'dailylog.txt'), 'a') as file:
 		string = name.getFName() + ' ' + name.getLName() + ' ' + name.getEmail()+ "\n"
 		file.write(string)
 
 #open file, go to last line and add X, close file
 def dailyConcern(name):
-	t = open('dailylog.txt', 'r+')
+	t = open(os.path.join(HOME_PATH, 'dailylog.txt'), 'r+')
 	last_line = t.readlines()
 	last_line[-1] = "X " + name.getFName() + ' ' + name.getLName() + ' ' + name.getEmail() + "\n"
-	final_log = open('dailylog.txt', 'w')
+	final_log = open(os.path.join(HOME_PATH, 'dailylog.txt'), 'w')
 	final_log.writelines(last_line)
 	final_log.close()
 
@@ -43,7 +45,7 @@ def summary(path = 'summary.txt'):
 				sum_file.writelines(string)
 	
 def getDailyLog():
-	with open('dailylog.txt', 'r') as file:
+	with open(os.path.join(HOME_PATH, 'dailylog.txt'), 'r') as file:
 		data = file.read()
 		return data
 
