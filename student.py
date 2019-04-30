@@ -14,6 +14,8 @@ class Student:
         self.email = email
         self.pspell = pSpelling
         self.reveal = reveal
+
+        # each student is initially called on 0 times
         self.calledOnCount = 0
         self.concernCount = 0
 
@@ -48,6 +50,7 @@ class Student:
     def getCalledOnCount(self):
         return self.calledOnCount
 
+    # used for filling up the queue from a roster file
     def setCalledOnCount(self, called):
         try:
             self.calledOnCount = int(called)
@@ -57,14 +60,17 @@ class Student:
     def getConcernCount(self):
         return self.concernCount
 
+    # used for filling up the queue from a roster file
     def setConcernCount(self, concerns):
         try:
             self.concernCount = int(concerns)
         except:
             pass
-    
+
+    # string format
     def __str__(self):
         return self.fname + ' ' + self.lname
+
     def __eq__(self, other):
         if other == None:
             return False
