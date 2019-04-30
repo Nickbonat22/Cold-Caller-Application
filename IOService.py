@@ -3,7 +3,7 @@
 CIS 422 Project 1
 Author: Zach Domke
 Created on: Apr 14, 2019
-Last modified by: Zach Domke @ Apr 27, 2019
+Last modified by: Zach Domke @ Apr 28, 2019
 Topic: IO Contoller Class
 Effect: Imports a new roster to the system. Exports the current roster to the user. Manages the cache in the system.
 '''
@@ -15,8 +15,7 @@ from student import Student
 from student_queue import Student_queue
 DELIM = '\t'
 
-# Main import function. Takes in a new roster and replaces the old roster.
-# Checks for a new roster in the path "ImportFolder/New Roster.tsv" and replaces "Resources/Internal Roster.tsv".
+# IO class manages any importing, exporting, or rewriting of files in Cold Caller.
 @Singleton
 class IO:
     curr_queue = None
@@ -29,14 +28,22 @@ class IO:
             print("No internal roster found")
             pass
         
+
+# Helper method for getting the current queue.
     def get_curr_queue(self): 
         return self.curr_queue
     
+
+# Helper method for setting the current queue.
     def set_curr_queue(self, to_queue = None):
         if not to_queue == None:
             self.curr_queue = to_queue
         self.cache(self.curr_queue)
 
+
+# importRoster() takes in a file path to where we are importing a roster from.
+# The method will read the new list of students, read the old list of students, and then merge the 2 once instructed by the user.
+# Once the new list of students is compiled, the method overwrites the Internal Roster with the new list.
     def importRoster(self, filePath, user_response = False):
         # Locates the new roster or stops running if there is no new roster.
         newRoster = None
@@ -91,7 +98,10 @@ class IO:
         #     os.remove("ImportFolder/New Roster.tsv")
         return (0,)
 
-    # Compares 2 lists of students and confirms changes with the user.
+
+# Helper function importWarning() takes in 2 lists of students.
+# The method will compare the 2 lists and return a list of differences.
+# The list of differences will also consist of who is added or removed.
     def importWarning(self, newStudentQ, oldStudentQ):
         # Populates the list of differences and tells whether the student will be added or removed.
         diffStudentQ = []
@@ -120,6 +130,9 @@ class IO:
             diff += '\n'        
         return diff
         
+
+# exportRoster() will take in a path to where the current roster will be exported.
+# It will copy the internal Roster to the provided path.
     def exportRoster(self, filePath):
         studentQ = []
         existingRoster = open("Resources/Internal Roster.tsv", 'r')
@@ -134,6 +147,9 @@ class IO:
             "<reveal code>\n")
         self.writeToFile(studentQ, output, False)
 
+
+# cache() takes in a list of students and will overwrite the Internal Roster with the current list of students.
+# The Internal Roster is used to manage and save the queue.
     def cache(self, studentQueue):
         DELIM = '\t'
         existingRoster = open("Resources/Internal Roster.tsv", 'w')
@@ -148,23 +164,9 @@ class IO:
         self.writeToFile(studentQueue.getQueue(), existingRoster, True)
         existingRoster.close()
 
-    def is_tsv(self, infile):
-        try:
-            DELIM = '\t'
-            dialect = csv.Sniffer().sniff(infile.read(1024), delimiters=DELIM)
-            infile.seek(0)
-            return True
-        except csv.Error:
-            try:
-                DELIM = ', '
-                dialect = csv.Sniffer().sniff(infile.read(1024))
-                infile.seek(0)
-                return True
-            except csv.Error:
-                DELIM = '\t'
-                return False
 
-    # code for creating an output file that will not replace/override a file
+# createFile() will an output file that will not override any other file.
+# The method checks if another file by that name already exists, and if it does, it increments a number in the file name.
     def createFile(self, fileName):
         try:
             output = open(fileName + ".tsv", 'x')
@@ -179,6 +181,10 @@ class IO:
 
         return output
 
+
+# The readFile() method will take in a list to populate with students and a file to read from.
+# The method stars by checking if the file is a tsv or csv, then reads each row of the file.
+# For each row, the method will create a student and append that to the list.
     def readFile(self, studentQ, input, importCodes):
         # sys.path = currentSys
         if not self.is_tsv(input):
@@ -202,6 +208,28 @@ class IO:
         del studentQ[0]
         return studentQ
 
+
+# A helper function, is_tsv() takes in a file and checks if the file is a csv or a tsv file.
+# Once the format is determined, the global variable DELIM is altered to match the format.
+    def is_tsv(self, infile):
+        try:
+            DELIM = '\t'
+            dialect = csv.Sniffer().sniff(infile.read(1024), delimiters=DELIM)
+            infile.seek(0)
+            return True
+        except csv.Error:
+            try:
+                DELIM = ', '
+                dialect = csv.Sniffer().sniff(infile.read(1024))
+                infile.seek(0)
+                return True
+            except csv.Error:
+                DELIM = '\t'
+                return False
+
+
+# writeToFile() will take in a list of students and which file to write them to.
+# The method runs through each student in the list and writes the required information to the output file.
     def writeToFile(self, studentQ, output, printCodes):
         if printCodes:
             for student in studentQ:
@@ -221,30 +249,3 @@ class IO:
                 output.write(student.getEmail() + DELIM)
                 output.write(student.getPSpell() + DELIM)
                 output.write(str(student.getReveal()) + '\n')
-
-
-
-def main():
-    tester = IO.instance()
-
-    # Test import roster
-    tester.importRoster("/ImportFolder/New Roster.tsv")
-
-    # Test export roster
-    tester.exportRoster("ImportFolder/Exported Roster.tsv")
-
-    # Test caching
-    studentQ = []
-    existingRoster = open("Resources/Internal Roster.tsv", 'r')
-    tester.readFile(studentQ, existingRoster, True)
-    workingQueue = Student_queue()
-    workingQueue.setQueue(studentQ)
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    workingQueue.pushRandom(workingQueue.popfrom(1))
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    workingQueue.pushRandom(workingQueue.popfrom(2))
-    workingQueue.pushRandom(workingQueue.popfrom(0))
-    tester.cache(workingQueue)
-
-if __name__ == "__main__":
-    main()
